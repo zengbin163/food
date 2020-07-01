@@ -1,0 +1,12 @@
+member:
+ notes: 欢迎光临
+server:
+ port: 8085
+# nacos相关配置
+nacos.config.endpoint: acm.aliyun.com
+nacos.config.namespace: 7670869b-ae01-4ff5-92fb-5e2d0ca7c14d
+# 推荐使用 RAM 用户的 accessKey 和 secretKey
+nacos.config.access-key: LTAI4Fw1XzGcpzbKGzcp2NuL
+nacos.config.secret-key: EDOQ2tzsPv4dSjrEFORHHlqJuE7nmp
+
+#微信小程序相关配置
