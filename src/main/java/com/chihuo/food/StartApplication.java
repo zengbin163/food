@@ -1,4 +1,4 @@
-package com.famiao.member;
+package com.chihuo.food;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

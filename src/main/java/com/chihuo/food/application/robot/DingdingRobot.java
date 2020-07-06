@@ -1,4 +1,4 @@
-package com.famiao.member.application.robot;
+package com.chihuo.food.application.robot;
 
 import java.net.URLEncoder;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.famiao.member.application;
+package com.chihuo.food.application;
 
 import java.util.HashMap;
 import java.util.Map;

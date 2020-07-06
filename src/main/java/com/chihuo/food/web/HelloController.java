@@ -1,4 +1,4 @@
-package com.famiao.member.web;
+package com.chihuo.food.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
