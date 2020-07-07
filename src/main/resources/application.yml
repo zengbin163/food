@@ -2,6 +2,33 @@ member:
  notes: 欢迎光临
 server:
  port: 8085
+#数据库相关配置
+spring:
+   datasource:
+      hikari:
+         master:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+            username: root
+            password: ntVklfM5@VMj2pHd
+            idleTimeout: 60000
+            connectionTimeout: 60000
+            validationTimeout: 3000
+            loginTimeout: 5
+            maxLifetime: 60000
+         slave:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+            username: root
+            password: ntVklfM5@VMj2pHd
+            idleTimeout: 60000
+            connectionTimeout: 60000
+            validationTimeout: 3000
+            loginTimeout: 5
+            maxLifetime: 60000
+logging:
+   level:
+      com.chihuo.food: debug
 # nacos相关配置
 nacos.config.endpoint: acm.aliyun.com
 nacos.config.namespace: 7670869b-ae01-4ff5-92fb-5e2d0ca7c14d
@@ -9,4 +36,3 @@ nacos.config.namespace: 7670869b-ae01-4ff5-92fb-5e2d0ca7c14d
 nacos.config.access-key: LTAI4Fw1XzGcpzbKGzcp2NuL
 nacos.config.secret-key: EDOQ2tzsPv4dSjrEFORHHlqJuE7nmp
 
-#微信小程序相关配置
