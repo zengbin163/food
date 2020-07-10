@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chihuo.food.application.service.CategoryApplicationService;
@@ -22,12 +23,14 @@ public class CategoryApi {
     private CategoryApplicationService categoryApplicationService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
     public Response save(CategoryDTO categoryDTO) {
         this.categoryApplicationService.createCategory(CategoryAssembler.toDO(categoryDTO));
         return Response.ok();
     }
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
     public Response update(CategoryDTO categoryDTO) {
     	this.categoryApplicationService.updateCategory(CategoryAssembler.toDO(categoryDTO));
     	return Response.ok();

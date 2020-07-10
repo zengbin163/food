@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chihuo.food.domain.category.entity.Category;
+import com.chihuo.food.domain.category.entity.CategoryItem;
+import com.chihuo.food.domain.category.entity.CategoryType;
 import com.chihuo.food.domain.category.service.CategoryDomainService;
 
 @Service
@@ -30,4 +33,27 @@ public class CategoryApplicationService {
     	return this.categoryDomainService.queryCategoryListByParentId(parentId);
     }
     
+    public List<CategoryType> queryCategoryTypeList() {
+    	return this.categoryDomainService.queryCategoryTypeList();
+    }
+    
+    public void createItem(CategoryItem categoryItem) {
+    	this.categoryDomainService.createItem(categoryItem);
+    }
+
+    public void updateItem(CategoryItem categoryItem) {
+    	this.categoryDomainService.updateItem(categoryItem);
+    }
+
+	public CategoryItem findItemById(Integer id) {
+		return this.categoryDomainService.findItemById(id);
+	}
+
+	public List<CategoryItem> queryCategoryItemListByCategoryId(Integer categoryId) {
+		return this.categoryDomainService.queryCategoryItemListByCategoryId(categoryId);
+	}
+
+	public IPage<CategoryItem> queryCategoryItemList(Integer current, Integer size, Integer typeId, Integer firstCategoryId, Integer secondCategoryId, String itemName) {
+		return this.categoryDomainService.queryCategoryItemList(current, size, typeId, firstCategoryId, secondCategoryId, itemName);
+	}
 }

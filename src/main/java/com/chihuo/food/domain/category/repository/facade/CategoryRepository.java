@@ -13,5 +13,5 @@ public interface CategoryRepository {
 	CategoryPO findById(Integer id);
 
     List<CategoryPO> queryCategoryListByParentId(Integer parentId);
-    
+
 }

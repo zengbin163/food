@@ -1,7 +1,9 @@
 package com.chihuo.food.interfaces.assembler;
 
 import com.chihuo.food.domain.category.entity.Category;
+import com.chihuo.food.domain.category.entity.CategoryItem;
 import com.chihuo.food.interfaces.dto.CategoryDTO;
+import com.chihuo.food.interfaces.dto.CategoryItemDTO;
 
 public class CategoryAssembler {
 
@@ -21,5 +23,21 @@ public class CategoryAssembler {
 		category.setCategoryTypeId(dto.getCategoryTypeId());
 		category.setCategoryName(dto.getCategoryName());
 		return category;
+	}
+	
+	public static CategoryItemDTO toItemDTO(CategoryItem categoryItem) {
+		CategoryItemDTO dto = new CategoryItemDTO();
+		dto.setId(categoryItem.getId());
+		dto.setCategoryId(categoryItem.getCategoryId());
+		dto.setItemName(categoryItem.getItemName());
+		return dto;
+	}
+	
+	public static CategoryItem toItemDO(CategoryItemDTO dto) {
+		CategoryItem item = new CategoryItem();
+		item.setId(dto.getId());
+		item.setCategoryId(dto.getCategoryId());
+		item.setItemName(dto.getItemName());
+		return item;
 	}
 }
