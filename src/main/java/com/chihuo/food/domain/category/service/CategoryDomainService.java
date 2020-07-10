@@ -67,6 +67,10 @@ public class CategoryDomainService {
     public void updateItem(CategoryItem categoryItem) {
     	this.categoryItemRepository.update(categoryFactory.createCategoryItemPO(categoryItem));
     }
+    
+    public void deleteItem(Integer id) {
+    	this.categoryItemRepository.delete(id);
+    }
 
 	public CategoryItem findItemById(Integer id) {
 		if(null == id) {

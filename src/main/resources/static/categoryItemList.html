@@ -78,7 +78,7 @@
 				</div>
 			</form>
 			<div style="text-align:center;padding:5px 0">
-				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitDialogForm()" style="width:80px">保存</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveCategoryItem()" style="width:80px">保存</a>
 			</div>
 		</div>
 
@@ -98,7 +98,7 @@
 				</div>
 			</form>
 			<div style="text-align:center;padding:5px 0">
-				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitDialogEditForm()" style="width:80px">保存</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="editCategoryItem()" style="width:80px">保存</a>
 			</div>
 		</div>
 		
@@ -158,12 +158,17 @@
 					},{
 						iconCls:'icon-add',
 						handler:function(){
-							saveCategoryItem();
+							saveCategoryItemPreview();
 						}
 					},{
 						iconCls:'icon-edit',
 						handler:function(){
-							editCategoryItem();
+							editCategoryItemPreview();
+						}
+					},{
+						iconCls:'icon-remove',
+						handler:function(){
+							deleteCategoryItem();
 						}
 					}]
 				});			
@@ -222,12 +227,17 @@
 							},{
 								iconCls:'icon-add',
 								handler:function(){
-									saveCategoryItem();
+									saveCategoryItemPreview();
 								}
 							},{
 								iconCls:'icon-edit',
 								handler:function(){
-									editCategoryItem();
+									editCategoryItemPreview();
+								}
+							},{
+								iconCls:'icon-remove',
+								handler:function(){
+									deleteCategoryItem();
 								}
 							}],
 							onSelectPage: function (pageNum, pageSize) {
@@ -236,7 +246,7 @@
 				        });  
 				    },
 				    error:function(data){
-				        alert("查询失败error");
+			        	$.messager.alert('ERROR', '查询失败' + data);
 				    }
 				});
 			}
@@ -248,41 +258,7 @@
 				$('#itemName').textbox('clear');
 			}
 			
-			function submitDialogForm() {
-				var dialogFirstCategoryId = $('#dialogFirstCategoryId').combobox('getValue');
-				var dialogSecondCategoryId = $('#dialogSecondCategoryId').combobox('getValue');
-				var dialogItemName = $('#dialogItemName').textbox('getValue');
-				if(dialogFirstCategoryId == '' || dialogSecondCategoryId == '' || dialogItemName == '') {
-					$.messager.alert('ERROR','参数不能为空');
-					return;
-				}
-				var requestParam = {
-						'categoryId':dialogSecondCategoryId,
-						'itemName':encodeURIComponent(dialogItemName)				
-					};
-					$.ajax({
-					    type:"POST",                          //请求类型
-					    url:host + "/categoryItem/save",      //URL
-					    data:JSON.stringify(requestParam),    //传递的参数
-					    dataType:"json",                      //返回的数据类型
-					    success:function(data){               //data就是返回的json类型的数据
-					        if(data.status == "SUCCESS"){
-					        	$('#dialogDivId').dialog('close');
-					        	queryList('','');
-					        }else if(data.status == "FAILED"){
-					            alert("新增失败");
-					        }else{
-					            alert("系统异常");
-					        }
-					    },
-					    error:function(data){
-					        alert("新增失败" + data);
-					    }
-					});				
-					$('#dialogCategoryItemForm').form('submit');
-			}
-			
-			function saveCategoryItem() {
+			function saveCategoryItemPreview() {
 				//一级类目初始化
 				$('#dialogFirstCategoryId').combobox({
 				    url: host + '/category/findByPid?parentId=' + 0,
@@ -323,9 +299,47 @@
 		           modal: true
 		        });
 			}
+
+			function saveCategoryItem() {
+				var dialogFirstCategoryId = $('#dialogFirstCategoryId').combobox('getValue');
+				var dialogSecondCategoryId = $('#dialogSecondCategoryId').combobox('getValue');
+				var dialogItemName = $('#dialogItemName').textbox('getValue');
+				if(dialogFirstCategoryId == '' || dialogSecondCategoryId == '' || dialogItemName == '') {
+					$.messager.alert('ERROR','参数不能为空');
+					return;
+				}
+				var requestParam = {
+						'categoryId':dialogSecondCategoryId,
+						'itemName':encodeURIComponent(dialogItemName)				
+					};
+					$.ajax({
+					    type:"POST",                          //请求类型
+					    url:host + "/categoryItem/save",      //URL
+					    data:JSON.stringify(requestParam),    //传递的参数
+					    dataType:"json",                      //返回的数据类型
+					    success:function(data){               //data就是返回的json类型的数据
+					        if(data.status == "SUCCESS"){
+					        	$('#dialogDivId').dialog('close');
+					        	queryList('','');
+					        }else if(data.status == "FAILED"){
+								$.messager.alert('FAILED', '新增失败');
+					        }else{
+								$.messager.alert('ERROR', '系统异常');
+					        }
+					    },
+					    error:function(data){
+							$.messager.alert('ERROR', '新增失败' + data);
+					    }
+					});				
+					$('#dialogCategoryItemForm').form('submit');
+			}
 			
-			function editCategoryItem() {
+			//定义分类属性item主键id，用户编辑分类属性
+			var editItemId = '';
+			function editCategoryItemPreview() {
 				var row = $('#categoryItemList').datagrid('getSelected');
+	        	//分类属性id初始化
+	        	editItemId = row.id;
 				if(row == null || row == ''){
 					$.messager.alert('ERROR', '请选中一条分类属性');
 				} else {
@@ -378,6 +392,8 @@
 						                }
 									}
 								});
+								//属性名称
+								$('#dialogEditItemName').textbox('setValue', data.itemName);
 								//打开dialog
 					        	$('#dialogEditDivId').dialog({
 							           title: '编辑分类属性',
@@ -390,9 +406,70 @@
 					        }
 					    },
 					    error:function(data){
-					        alert("新增失败" + data);
+				        	$.messager.alert('ERROR', '新增失败' + data);
 					    }
 				   });				
+				}
+			}
+			
+			function editCategoryItem() {
+				var dialogEditFirstCategoryId = $('#dialogEditFirstCategoryId').combobox('getValue');
+				var dialogEditSecondCategoryId = $('#dialogEditSecondCategoryId').combobox('getValue');
+				var dialogEditItemName = $('#dialogEditItemName').textbox('getValue');
+				if(dialogEditFirstCategoryId == '' || dialogEditSecondCategoryId == '' || dialogEditItemName == '') {
+					$.messager.alert('ERROR','参数不能为空');
+					return;
+				}
+				var requestParam = {
+						'id':editItemId,
+						'categoryId':dialogEditSecondCategoryId,
+						'itemName':encodeURIComponent(dialogEditItemName)				
+					};
+					$.ajax({
+					    type:"POST",                          //请求类型
+					    url:host + "/categoryItem/update",      //URL
+					    data:JSON.stringify(requestParam),    //传递的参数
+					    dataType:"json",                      //返回的数据类型
+					    success:function(data){               //data就是返回的json类型的数据
+					        if(data.status == "SUCCESS"){
+					        	$('#dialogEditDivId').dialog('close');
+					        	queryList('','');
+					        }else if(data.status == "FAILED"){
+					        	$.messager.alert('FAILED', '更新失败');
+					        }else{
+					        	$.messager.alert('ERROR', '系统异常');
+					        }
+					    },
+					    error:function(data){
+				        	$.messager.alert('ERROR', '更新失败' + data);
+					    }
+					});				
+					$('#dialogEditCategoryItemForm').form('submit');
+			}
+			
+			function deleteCategoryItem() {
+				var row = $('#categoryItemList').datagrid('getSelected');
+				if(row == null || row == ''){
+					$.messager.alert('ERROR', '请选中一条分类属性');
+				} else {
+					$.ajax({
+					    type:"POST",                          //请求类型
+					    url:host + "/categoryItem/delete?id=" + row.id,      //URL
+					    dataType:"json",                      //返回的数据类型
+					    success:function(data){               //data就是返回的json类型的数据
+					        if(data.status == "SUCCESS"){
+					        	$.messager.alert('SUCCESS', '删除成功');
+					        	queryList('','');
+					        }else if(data.status == "FAILED"){
+					        	$.messager.alert('FAILED', '删除失败');
+					        }else{
+					        	$.messager.alert('ERROR', '系统异常');
+					        }
+					    },
+					    error:function(data){
+				        	$.messager.alert('ERROR', '删除失败' + data);
+					    }
+					});				
 				}
 			}
 		</script>

@@ -37,6 +37,12 @@ public class CategoryItemApi {
     	return Response.ok();
     }
     
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public Response delete(@RequestParam(value = "id") Integer id) {
+    	this.categoryApplicationService.deleteItem(id);
+    	return Response.ok();
+    }
+    
     @RequestMapping(value = "/findItemById", method = RequestMethod.GET)
     public CategoryItem findItemById(@RequestParam(value = "id") Integer id) {
     	return this.categoryApplicationService.findItemById(id);

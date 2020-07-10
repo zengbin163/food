@@ -11,6 +11,8 @@ public interface CategoryItemRepository {
 	void save(CategoryItemPO categoryItemPO);
 
 	void update(CategoryItemPO categoryItemPO);
+	
+	void delete(Integer id);
 
 	CategoryItemPO findById(Integer id);
 

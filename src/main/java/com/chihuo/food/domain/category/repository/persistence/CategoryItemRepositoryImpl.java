@@ -27,6 +27,11 @@ public class CategoryItemRepositoryImpl implements CategoryItemRepository {
 		this.categoryItemDao.update(categoryItemPO);
 	}
 	
+	@Override
+	public void delete(Integer id) {
+		this.categoryItemDao.delete(id);
+	}
+	
     @Override
     public CategoryItemPO findById(Integer id) {
         return this.categoryItemDao.findById(id);

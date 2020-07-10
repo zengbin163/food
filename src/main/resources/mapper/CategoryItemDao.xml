@@ -63,6 +63,10 @@
         </set>
         where id = #{categoryItemPO.id}
 	</update>
+	
+	<delete id="delete">
+		delete from category_item where id = #{id}
+	</delete>
     
     <select id="findById" parameterType="Integer" resultMap="categoryItemResultMap">
         select ci.id item_id,
@@ -120,6 +124,6 @@
 		         and ci.item_name like concat('%',#{itemName},'%') 
 		    </if>
 		</where>
-		order by ci.create_time desc
+		order by ci.update_time desc
 	</select>
 </mapper>

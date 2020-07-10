@@ -15,6 +15,8 @@ public interface CategoryItemDao extends BaseMapper<CategoryItemPO> {
 	
 	void update(@Param("categoryItemPO") CategoryItemPO categoryItemPO);
 	
+	void delete(Integer id);
+
 	CategoryItemPO findById(Integer id);
 	
 	List<CategoryItemPO> queryCategoryItemListByCategoryId(Integer categoryId);

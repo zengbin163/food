@@ -44,6 +44,10 @@ public class CategoryApplicationService {
     public void updateItem(CategoryItem categoryItem) {
     	this.categoryDomainService.updateItem(categoryItem);
     }
+    
+    public void deleteItem(Integer id) {
+    	this.categoryDomainService.deleteItem(id);
+    }
 
 	public CategoryItem findItemById(Integer id) {
 		return this.categoryDomainService.findItemById(id);
