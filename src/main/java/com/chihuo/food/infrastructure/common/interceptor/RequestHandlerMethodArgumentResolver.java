@@ -1,6 +1,8 @@
 package com.chihuo.food.infrastructure.common.interceptor;
 
 import java.io.BufferedReader;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,13 +14,17 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
 import com.alibaba.fastjson.JSONObject;
+
 import cn.hutool.core.util.URLUtil;
 
 public class RequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
 	public static final Logger log = LoggerFactory.getLogger(RequestHandlerInterceptor.class);
 
+	private List<String> EXCLUDE_URLS = Arrays.asList("/file/uploadJson");
+	
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return true;
@@ -28,7 +34,11 @@ public class RequestHandlerMethodArgumentResolver implements HandlerMethodArgume
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		// 把reqeust的body读取到StringBuilder
 		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-		log.info("==========解析参数处理=========={}", request.getRequestURI());
+		String requestURI = request.getRequestURI();
+		log.info("==========解析参数处理=========={}", requestURI);
+		if(EXCLUDE_URLS.contains(requestURI)) {
+			return null;
+		}
 		BufferedReader reader = request.getReader();
 		StringBuilder sb = new StringBuilder();
 		char[] buf = new char[1024];

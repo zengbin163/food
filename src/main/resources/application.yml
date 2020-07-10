@@ -2,6 +2,7 @@ member:
  notes: 欢迎光临
 server:
  port: 8085
+ host: 127.0.0.1
 #数据库相关配置
 spring:
    datasource:
@@ -35,4 +36,8 @@ nacos.config.namespace: 7670869b-ae01-4ff5-92fb-5e2d0ca7c14d
 # 推荐使用 RAM 用户的 accessKey 和 secretKey
 nacos.config.access-key: LTAI4Fw1XzGcpzbKGzcp2NuL
 nacos.config.secret-key: EDOQ2tzsPv4dSjrEFORHHlqJuE7nmp
-
+# 文件上传后存放的路径   windows:file:F:/image/     linux:file:///data/image/
+file:
+  upload:
+    resource: /pic/
+    path: D:/pic/test/

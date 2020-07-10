@@ -8,6 +8,7 @@
 		<script type="text/javascript" src="/common/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/common/js/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="/common/js/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="/category/initCategory.js"></script>
 		<script type="text/javascript">
 			var host = 'http://127.0.0.1:8085';
 			var reqUrl = host + '/categoryItem/findItemList';
@@ -115,37 +116,10 @@
 				required:false,
 				labelWidth:'70px'
 			});
-			//一级类目初始化
-			$('#firstCategoryId').combobox({
-			    url: host + '/category/findByPid?parentId=' + 0,
-			    method:'get',
-				valueField:'id',
-				textField:'categoryName',
-				panelHeight:'auto',
-				label: '一级分类:',
-				labelPosition: 'left',
-				required:false,
-				labelWidth:'70px',
-				onLoadSuccess: function() {
-					$('#secondCategoryId').combobox('disable');
-				},
-				onSelect: function(param) {
-					$('#secondCategoryId').combobox('reload', host + '/category/findByPid?parentId=' + param.id);
-					$('#secondCategoryId').combobox('enable');
-				}
-			});
-			//二级类目初始化
-			$('#secondCategoryId').combobox({
-			    url: '',
-			    method:'get',
-				valueField:'id',
-				textField:'categoryName',
-				panelHeight:'auto',
-				label: '二级分类:',
-				labelPosition: 'left',
-				required:false,
-				labelWidth:'70px'
-			});
+			//初始化一级类目和二级类目
+			initSaveFirstCategory('firstCategoryId', 'secondCategoryId');
+			initSaveSecondCategory('secondCategoryId');
+
 			//datagrid界面初始化
 			$(function() {
 				var pager = $('#categoryItemList').datagrid().datagrid('getPager');
@@ -153,7 +127,7 @@
 					buttons:[{
 						iconCls:'icon-search',
 						handler:function(){
-							alert('search');
+				        	$.messager.alert('search', '搜索引擎还在维护中');
 						}
 					},{
 						iconCls:'icon-add',
@@ -222,7 +196,7 @@
 							buttons:[{
 								iconCls:'icon-search',
 								handler:function(){
-									alert('search');
+						        	$.messager.alert('search', '搜索引擎还在维护中');
 								}
 							},{
 								iconCls:'icon-add',
@@ -259,37 +233,10 @@
 			}
 			
 			function saveCategoryItemPreview() {
-				//一级类目初始化
-				$('#dialogFirstCategoryId').combobox({
-				    url: host + '/category/findByPid?parentId=' + 0,
-				    method:'get',
-					valueField:'id',
-					textField:'categoryName',
-					panelHeight:'auto',
-					label: '一级分类:',
-					labelPosition: 'left',
-					required:false,
-					labelWidth:'70px',
-					onLoadSuccess: function() {
-						$('#dialogSecondCategoryId').combobox('disable');
-					},
-					onSelect: function(param) {
-						$('#dialogSecondCategoryId').combobox('reload', host + '/category/findByPid?parentId=' + param.id);
-						$('#dialogSecondCategoryId').combobox('enable');
-					}
-				});
-				//二级类目初始化
-				$('#dialogSecondCategoryId').combobox({
-				    url: '',
-				    method:'get',
-					valueField:'id',
-					textField:'categoryName',
-					panelHeight:'auto',
-					label: '二级分类:',
-					labelPosition: 'left',
-					required:false,
-					labelWidth:'70px'
-				});
+				//初始化一级类目和二级类目
+				initSaveFirstCategory('dialogFirstCategoryId', 'dialogSecondCategoryId');
+				initSaveSecondCategory('dialogSecondCategoryId');
+
 				$('#dialogDivId').dialog({
 		           title: '新增分类属性',
 		           width: 400,
@@ -338,11 +285,12 @@
 			var editItemId = '';
 			function editCategoryItemPreview() {
 				var row = $('#categoryItemList').datagrid('getSelected');
-	        	//分类属性id初始化
-	        	editItemId = row.id;
 				if(row == null || row == ''){
 					$.messager.alert('ERROR', '请选中一条分类属性');
 				} else {
+		        	//分类属性id初始化
+		        	editItemId = row.id;
+					//发起查询请求
 					$.ajax({
 					    type:"GET",                          //请求类型
 					    url:host + "/categoryItem/findItemById?id=" + row.id,  //URL
@@ -352,46 +300,9 @@
 					        	$.messager.alert('ERROR', '系统异常');
 					        } else {
 								//一级类目初始化
-								$('#dialogEditFirstCategoryId').combobox({
-								    url: host + '/category/findByPid?parentId=' + 0,
-								    method:'get',
-									valueField:'id',
-									textField:'categoryName',
-									panelHeight:'auto',
-									label: '一级分类:',
-									labelPosition: 'left',
-									required:false,
-									labelWidth:'70px',
-									onLoadSuccess: function() {
-										//设置一级分类选中的值
-										$('#dialogEditFirstCategoryId').combobox('select', data.category.parentId);
-										//设置二级分类选中的值
-										$('#dialogEditSecondCategoryId').combobox('select', data.category.id);
-										$('#dialogEditSecondCategoryId').combobox('disable');
-									},
-									onSelect: function(param) {
-										$('#dialogEditSecondCategoryId').combobox('reload', host + '/category/findByPid?parentId=' + param.id);
-										$('#dialogEditSecondCategoryId').combobox('enable');
-									}
-								});
+								initEditFirstCategory('dialogEditFirstCategoryId', 'dialogEditSecondCategoryId', data);
 								//二级类目初始化
-								$('#dialogEditSecondCategoryId').combobox({
-								    url: '',
-								    method:'get',
-									valueField:'id',
-									textField:'categoryName',
-									panelHeight:'auto',
-									label: '二级分类:',
-									labelPosition: 'left',
-									required:false,
-									labelWidth:'70px',
-									onLoadSuccess: function() {
-								        var data= $('#dialogEditSecondCategoryId').combobox("getData");
-						                if (data.length > 0) {
- 						                    $('#dialogEditSecondCategoryId').combobox('select', data[0].id);
-						                }
-									}
-								});
+								initEditSecondCategory('dialogEditSecondCategoryId', data);
 								//属性名称
 								$('#dialogEditItemName').textbox('setValue', data.itemName);
 								//打开dialog
