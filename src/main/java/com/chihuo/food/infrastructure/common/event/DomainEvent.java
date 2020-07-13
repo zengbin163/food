@@ -1,14 +1,17 @@
 package com.chihuo.food.infrastructure.common.event;
 
-import lombok.Data;
-
 import java.util.Date;
 
-@Data
-public class DomainEvent {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    String id;
-    Date timestamp;
-    String source;
-    String data;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DomainEvent {
+	String id;
+	Date timestamp;
+	String source;
+	String data;
 }

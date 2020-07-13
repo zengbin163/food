@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chihuo.food.domain.food.repository.mapper.FoodDao">
+
+	<resultMap id="foodResultMap" type="com.chihuo.food.domain.food.repository.po.FoodPO">
+	  <id column="food_id" jdbcType="INTEGER" property="id" />
+	  <result column="food_name" jdbcType="VARCHAR" property="foodName" />
+	  <result column="food_pic" jdbcType="VARCHAR" property="foodPic" />
+	  <result column="food_info" jdbcType="VARCHAR" property="foodInfo" />
+	  <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+	  <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+	  
+	  <association property="categoryPO" resultMap="categoryResultMap"/>
+	</resultMap>
+
+	<resultMap id="categoryResultMap" type="com.chihuo.food.domain.category.repository.po.CategoryPO" >
+	    <id column="category_id" javaType="INTEGER" property="id" />
+		<result column="category_type_id" jdbcType="INTEGER" property="categoryTypeId" />
+		<result column="c_parent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />	    
+	</resultMap>
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.chihuo.food.domain.food.repository.po.FoodPO">
+		  insert into food (
+				category_id,
+				food_name,
+				food_pic,
+				food_info,
+				create_time,
+				update_time
+		  ) values (
+		    	#{foodPO.categoryPO.id},
+		    	#{foodPO.foodName},
+		   		#{foodPO.foodPic},
+		   		#{foodPO.foodInfo},
+	            NOW(),
+		        NOW()
+		  )
+	</insert>
+    
+	<update id="update" parameterType="com.chihuo.food.domain.food.repository.po.FoodPO">
+        update food
+        <set>
+            update_time=NOW(),
+            <if test="foodPO.categoryPO.id != null">category_id=#{foodPO.categoryPO.id},</if>
+            <if test="foodPO.foodName != null">food_name=#{foodPO.foodName},</if>
+            <if test="foodPO.foodPic != null">food_pic=#{foodPO.foodPic},</if>
+            <if test="foodPO.foodInfo != null">food_info=#{foodPO.foodInfo},</if>
+        </set>
+        where id = #{foodPO.id}
+	</update>
+    
+    <select id="findById" parameterType="Integer" resultMap="foodResultMap">
+        select f.id food_id,
+        	   f.food_name food_name,
+        	   f.food_pic food_pic,
+        	   f.food_info food_info,
+        	   f.create_time createTime,
+        	   f.update_time updateTime,
+        	   c.id category_id,
+    	   	   c.parent_id c_parent_id,
+			   c.category_name category_name
+        from food f JOIN category c ON f.category_id = c.id
+        where f.id = #{id}
+    </select>
+    
+    <select id="queryFoodList" resultMap="foodResultMap">
+        select f.id food_id,
+        	   f.food_name food_name,
+        	   f.food_pic food_pic,
+        	   f.food_info food_info,
+        	   f.create_time createTime,
+        	   f.update_time updateTime,
+        	   c.id category_id,
+    	   	   c.parent_id c_parent_id,
+			   c.category_name category_name
+        from food f JOIN category c ON f.category_id = c.id
+		<where>
+		    <if test="firstCategoryId != null">
+		         c.parent_id = #{firstCategoryId}
+		    </if>
+		    <if test="secondCategoryId != null">
+		         and c.id = #{secondCategoryId}
+		    </if>
+		    <if test="foodName != null">
+		         and f.food_name like concat('%',#{foodName},'%') 
+		    </if>
+		</where>
+        order by f.update_time desc
+    </select>
+	
+</mapper>

@@ -37,12 +37,19 @@
 							labelWidth:'70px'" />
 				</div>
 				<div style="margin-bottom:20px">
-				         美食主图:
-                    <input id="foodPic" name="foodPic" type="text" style="width:300px">
-                    <!-- 图片预览功能  -->
-                   	<span id="imgSpan" style="display:none;"> 
-                   	   <img id="imgUrl" src="" alt="" style="width:50px;height:50px;"> 
-                   	</span>
+					<table>
+						<tr>
+							<td>
+							   <font style="font-size:14px;text-align:left;">美食主图:</font>
+							</td>
+							<td>
+							   <input id="foodPic" name="foodPic" type="text" style="width:300px">
+							</td>
+							<td>
+							   <img id="imgUrl" src="" alt="" style="width:30px;height:30px;display:none;"> 
+							</td>
+						</tr>
+					</table>
 				</div>
 				<div style="margin-bottom:20px">
 				          美食内容:
@@ -69,26 +76,12 @@
                 	UploadFile('foodPic');
                 }
             })
-            
+            //图片上传成功后就会在上传组件左侧预览显示
             function changeFileBoxValue(value) {
             	foodPicPath = value;
-            	$('#imgSpan').show();
+            	$('#imgUrl').show();
             	$("#imgUrl").attr('src', foodPicPath);
 			}
-			
-            function download(img){
-                $('#imgDialog').dialog({
-                    title: '预览',
-                    width: 600,
-                    height:500,
-                    resizable:true,
-                    closed: false,
-                    cache: false,
-                    modal: true
-                });
-                $("#imgPreview").attr("src", img);
-            }
-            
 		    //初始化富文本编辑框
 			var editor;
 			$(function() {
@@ -104,28 +97,31 @@
 		           }
 		       });
 			});
-			
+			//提交保存
 			function submitForm(){
 				var firstCategoryId = $('#firstCategoryId').combobox('getValue');
 				var secondCategoryId = $('#secondCategoryId').combobox('getValue');
 				var foodName = $('#foodName').val();
+				var foodPic = foodPicPath;
 				var foodInfo = document.getElementById("foodInfo").value;
 				//KindEditor.html('#foodInfo' , 'xxxxxxxxxxxxxxxxxxx');
-				var parentId = $('#parentId').combobox('getValue');
-				if(categoryTypeId == '' || parentId == '' || categoryName == '') {
+				if(firstCategoryId == '' || secondCategoryId == '' || foodName == '' || foodPic == '' || foodInfo == '') {
 					alert('参数不能为空');
 					return;
 				}
 				var requestParam = {
-					'categoryTypeId':categoryTypeId,
-					'parentId':parentId,
-					'categoryName':encodeURIComponent(categoryName)				
+					'categoryId':secondCategoryId,
+					'foodName':encodeURIComponent(foodName),
+					'foodPic':foodPic,
+					'foodInfo':escape(foodInfo)
 				};
+				
+				var jsonParam = JSON.stringify(requestParam);
 				
 				$.ajax({
 				    type:"POST",                      //请求类型
-				    url:host + "/category/save",      //URL
-				    data:JSON.stringify(requestParam),   			  //传递的参数
+				    url:host + "/food/save",      //URL
+				    data:jsonParam,   			  //传递的参数
 				    dataType:"json",                  //返回的数据类型
 				    success:function(data){           //data就是返回的json类型的数据
 				        if(data.status == "SUCCESS"){
@@ -140,7 +136,6 @@
 				        alert("新增失败" + data);
 				    }
 				});				
-				$('#foodForm').form('submit');
 			}
 			function clearForm(){
 				$('#foodForm').form('clear');

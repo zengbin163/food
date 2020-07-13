@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.chihuo.food.infrastructure.common.interceptor.RequestHandlerExceptionResolver;
 import com.chihuo.food.infrastructure.common.interceptor.RequestHandlerInterceptor;
 import com.chihuo.food.infrastructure.common.interceptor.RequestHandlerMethodArgumentResolver;
 
@@ -84,13 +86,21 @@ public class WebConfig implements WebMvcConfigurer {
     }
     
     /**
+     * 增加异常处理器
+     */
+    @Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+    	resolvers.add(new RequestHandlerExceptionResolver());
+    }
+    
+    /**
      * 设置跨域
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedMethods("*")
+                .allowedMethods("POST","GET","PUT","OPTIONS","DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
@@ -103,4 +113,5 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	registry.addResourceHandler(fileUploadResource + "**").addResourceLocations("file:" + fileUploadPath);
     }
+
 }

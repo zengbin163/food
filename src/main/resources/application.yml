@@ -9,7 +9,7 @@ spring:
       hikari:
          master:
             driverClassName: com.mysql.cj.jdbc.Driver
-            jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+            jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
             username: root
             password: ntVklfM5@VMj2pHd
             idleTimeout: 60000
@@ -19,7 +19,7 @@ spring:
             maxLifetime: 60000
          slave:
             driverClassName: com.mysql.cj.jdbc.Driver
-            jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+            jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
             username: root
             password: ntVklfM5@VMj2pHd
             idleTimeout: 60000

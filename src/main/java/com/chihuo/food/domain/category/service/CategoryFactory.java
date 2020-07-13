@@ -70,7 +70,7 @@ public class CategoryFactory {
 			return list;
 		}
 		for(CategoryTypePO po : poList) {
-			list.add(CategoryType.builder().id(po.getId()).typeName(po.getTypeName()).createTime(po.getCreateTime()).updateTime(po.getUpdateTime()).build());
+			list.add(this.createCategoryType(po));
 		}
 		return list;
 	}
@@ -81,11 +81,10 @@ public class CategoryFactory {
 			return list;
 		}
 		for(CategoryItemPO po : poList) {
-			CategoryItem categoryItem = CategoryItem.builder().id(po.getId()).itemName(po.getItemName()).categoryId(po.getCategoryId()).createTime(po.getCreateTime()).updateTime(po.getUpdateTime()).build();
+			CategoryItem categoryItem = this.createCategoryItem(po);
 			CategoryTypePO typePO = po.getCategoryTypePO();
 			if(typePO != null) {
-				CategoryType categoryType = CategoryType.builder().id(typePO.getId()).typeName(typePO.getTypeName()).createTime(typePO.getCreateTime()).updateTime(typePO.getUpdateTime()).build();
-				categoryItem.setCategoryType(categoryType);
+				categoryItem.setCategoryType(createCategoryType(typePO));
 			}
 			CategoryPO parentCategoryPO = po.getParentCategoryPO();
 			if(parentCategoryPO != null) {
