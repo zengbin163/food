@@ -33,8 +33,8 @@ public class FoodDomainService {
     @Autowired
     private FoodFactory foodFactory;
 
-    @Transactional
-    public void create(Food food) {
+	@Transactional(rollbackFor = Exception.class)
+    public void create(Food food) throws Exception {
     	if(StringUtils.isBlank(food.getFoodName())) {
     		throw new IllegalArgumentException("foodName is null");
     	}
@@ -57,18 +57,14 @@ public class FoodDomainService {
     	if(CollectionUtil.isEmpty(food.getFoodItemList())) {
     		throw new IllegalArgumentException("foodItemList is empty");
     	}
-    	
-        Integer foodId = this.foodRepository.save(foodFactory.createFoodPO(food));
-        
+	    
+    	Integer foodId = this.foodRepository.save(foodFactory.createFoodPO(food));
         List<FoodItem> foodItemList = food.getFoodItemList();
         for(FoodItem foodItem : foodItemList) {
         	foodItem.setFoodId(foodId);
         	this.foodItemRepository.save(foodFactory.createFoodItemPO(foodItem));
         }
-        
     	this.eventPublisher.publish(FoodEvent.create(FoodEventType.PUBLISH_EVENT, food));
-    	//@TODO 测试代码，优化完成后需要删除	
-    	throw new IllegalArgumentException("测试事务");
     }
 
     public void update(Food food) {
@@ -85,9 +81,10 @@ public class FoodDomainService {
     }
 
 	public IPage<Food> queryFoodList(Integer current, Integer size, Integer firstCategoryId, Integer secondCategoryId, String foodName) {
-		Page<?> page = new Page<Food>(current, size);
-		IPage<FoodPO> iPage = this.foodRepository.queryFoodList(page, firstCategoryId, secondCategoryId, foodName);
-		return this.foodFactory.createFoodPage(iPage);
+		Page<Food> page = new Page<Food>(current, size);
+		List<FoodPO> records = this.foodRepository.queryFoodList(page, firstCategoryId, secondCategoryId, foodName);
+		page.setRecords(this.foodFactory.createFoodList(records));
+		return page;
 	}
 
 }

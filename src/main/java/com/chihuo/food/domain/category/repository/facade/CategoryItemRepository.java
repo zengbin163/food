@@ -2,7 +2,6 @@ package com.chihuo.food.domain.category.repository.facade;
 
 import java.util.List;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chihuo.food.domain.category.repository.po.CategoryItemPO;
 
@@ -18,6 +17,6 @@ public interface CategoryItemRepository {
 
 	List<CategoryItemPO> queryCategoryItemListByCategoryId(Integer categoryId);
 
-	IPage<CategoryItemPO> queryCategoryItemList(Page<?> page, Integer typeId, Integer firstCategoryId, Integer secondCategoryId, String itemName);
+	List<CategoryItemPO> queryCategoryItemList(Page<?> page, Integer typeId, Integer firstCategoryId, Integer secondCategoryId, String itemName);
 
 }

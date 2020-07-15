@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chihuo.food.domain.category.repository.po.CategoryItemPO;
 
@@ -21,7 +20,7 @@ public interface CategoryItemDao extends BaseMapper<CategoryItemPO> {
 	
 	List<CategoryItemPO> queryCategoryItemListByCategoryId(Integer categoryId);
 
-	IPage<CategoryItemPO> queryCategoryItemList(Page<?> page, @Param("typeId") Integer typeId,
+	List<CategoryItemPO> queryCategoryItemList(Page<?> page, @Param("typeId") Integer typeId,
 			@Param("firstCategoryId") Integer firstCategoryId, @Param("secondCategoryId") Integer secondCategoryId,
 			@Param("itemName") String itemName);
 

@@ -13,17 +13,17 @@ public class FoodApplicationService {
     @Autowired
     private FoodDomainService foodDomainService;
 
-    public void createFood(Food food){
-    	this.foodDomainService.create(food);
-    }
-    
-    public void updateFood(Food food){
-    	this.foodDomainService.update(food);
-    }
-    
-    public Food findById(Integer id) {
-        return this.foodDomainService.findById(id);
-    }
+	public void createFood(Food food) throws Exception {
+		this.foodDomainService.create(food);
+	}
+
+	public void updateFood(Food food) {
+		this.foodDomainService.update(food);
+	}
+
+	public Food findById(Integer id) {
+		return this.foodDomainService.findById(id);
+	}
 
 	public IPage<Food> queryFoodList(Integer current, Integer size, Integer firstCategoryId, Integer secondCategoryId, String foodName) {
 		return this.foodDomainService.queryFoodList(current, size, firstCategoryId, secondCategoryId, foodName);

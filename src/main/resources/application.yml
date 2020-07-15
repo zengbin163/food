@@ -1,44 +1,86 @@
 member:
- notes: 欢迎光临
+ notes: 吃货美食
+
 server:
  port: 8085
  host: 127.0.0.1
+
 #数据库相关配置
 spring:
    datasource:
       hikari:
          master:
-            driver-class-name: com.mysql.cj.jdbc.Driver
+            type: com.alibaba.druid.pool.DruidDataSource     
             jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
             username: root
             password: ntVklfM5@VMj2pHd
-            idleTimeout: 60000
-            connectionTimeout: 60000
-            validationTimeout: 3000
-            loginTimeout: 5
-            maxLifetime: 60000
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            #初始连接数
+            initialSize: 5
+            #最小空闲连接数
+            minIdle: 5
+            #最大连接数
+            maxActive: 20
+            # 配置获取连接等待超时的时间
+            maxWait : 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis : 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            # 打开并且指定每个连接上PSCache的大小，Oracle应当打开
+            poolPreparedStatements: true
+            maxPoolPreparedStatementPerConnectionSize: 20
+            maxOpenPreparedStatements: 50
+            # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+            filters: stat,wall
+            # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+            connectionProperties: druid.stat.mergeSql= true;druid.stat.slowSqlMillis= 5000;druid.stat.logSlowSql= true
          slave:
-            driver-class-name: com.mysql.cj.jdbc.Driver
+            type: com.alibaba.druid.pool.DruidDataSource
             jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
             username: root
             password: ntVklfM5@VMj2pHd
-            idleTimeout: 60000
-            connectionTimeout: 60000
-            validationTimeout: 3000
-            loginTimeout: 5
-            maxLifetime: 60000
-   main:
-      allow-bean-definition-overriding: true
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            #初始连接数
+            initialSize: 5
+            #最小空闲连接数
+            minIdle: 5
+            #最大连接数
+            maxActive: 20
+            # 配置获取连接等待超时的时间
+            maxWait : 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis : 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            # 打开并且指定每个连接上PSCache的大小，Oracle应当打开
+            poolPreparedStatements: true
+            maxPoolPreparedStatementPerConnectionSize: 20
+            maxOpenPreparedStatements: 50
+            # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+            filters: stat,wall
+            # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+            connectionProperties: druid.stat.mergeSql= true;druid.stat.slowSqlMillis= 5000;druid.stat.logSlowSql= true
 
 logging:
    level:
       com.chihuo.food: debug
+
 # nacos相关配置
 nacos.config.endpoint: acm.aliyun.com
 nacos.config.namespace: 7670869b-ae01-4ff5-92fb-5e2d0ca7c14d
 # 推荐使用 RAM 用户的 accessKey 和 secretKey
 nacos.config.access-key: LTAI4Fw1XzGcpzbKGzcp2NuL
 nacos.config.secret-key: EDOQ2tzsPv4dSjrEFORHHlqJuE7nmp
+
 # 文件上传后存放的路径   windows:file:F:/image/     linux:file:///data/image/
 file:
   upload:

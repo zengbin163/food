@@ -1,6 +1,7 @@
 package com.chihuo.food.domain.food.repository.facade;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chihuo.food.domain.food.repository.po.FoodPO;
 
@@ -12,6 +13,6 @@ public interface FoodRepository {
 
 	FoodPO findById(Integer id);
 
-	IPage<FoodPO> queryFoodList(Page<?> page, Integer firstCategoryId, Integer secondCategoryId, String foodName);
+	List<FoodPO> queryFoodList(Page<?> page, Integer firstCategoryId, Integer secondCategoryId, String foodName);
 
 }

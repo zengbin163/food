@@ -89,9 +89,10 @@ public class CategoryDomainService {
 	}
 
 	public IPage<CategoryItem> queryCategoryItemList(Integer current, Integer size, Integer typeId, Integer firstCategoryId, Integer secondCategoryId, String itemName) {
-		Page<?> page = new Page<CategoryItem>(current, size);
-		IPage<CategoryItemPO> iPage = this.categoryItemRepository.queryCategoryItemList(page, typeId, firstCategoryId, secondCategoryId, itemName);
-		return this.categoryFactory.createCateItemPage(iPage);
+		Page<CategoryItem> page = new Page<CategoryItem>(current, size);
+		List<CategoryItemPO> records = this.categoryItemRepository.queryCategoryItemList(page, typeId, firstCategoryId, secondCategoryId, itemName);
+		page.setRecords(this.categoryFactory.createCategoryItemList(records));
+		return page;
 	}
 
 }

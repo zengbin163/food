@@ -23,7 +23,7 @@ public class FoodApi {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Response save(FoodDTO foodDTO) {
+    public Response save(FoodDTO foodDTO) throws Exception {
         this.foodApplicationService.createFood(FoodAssembler.toDO(foodDTO));
         return Response.ok();
     }

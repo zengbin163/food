@@ -3,6 +3,7 @@ package com.chihuo.food.infrastructure.common.database.dyna;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.mapping.BoundSql;
@@ -19,22 +20,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import com.chihuo.food.infrastructure.common.database.config.DataBaseSourceType;
+
 /**
  * @author zengbin
  * @Date 2019/6/8 12:18
  */
 // 指定拦截哪些方法,update包括增删改
-@Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
-    @Signature(type = Executor.class, method = "query",
-        args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
+@Intercepts({
+	@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
+	@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}),
+	@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})
+})
 public class DynamicDataSourceInterceptor implements Interceptor {
+	
     private static final String REGEX = ".*insert\\u0020.*|.*delete\\u0020.*|.*update\\u0020.*";
 	private final static Logger LOGGER = LoggerFactory.getLogger(DynamicDataSourceInterceptor.class);
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         boolean synchronizationActive = TransactionSynchronizationManager.isActualTransactionActive();
-        String lookupKey = DynamicDataSourceHolder.DB_MASTER;
+        DataBaseSourceType dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
         if (!synchronizationActive) {
             Object[] objects = invocation.getArgs();
             MappedStatement ms = (MappedStatement)objects[0];
@@ -43,21 +49,24 @@ public class DynamicDataSourceInterceptor implements Interceptor {
             if (ms.getSqlCommandType().equals(SqlCommandType.SELECT)) {
                 // 如果selectKey为自增id查询主键,使用主库
                 if (ms.getId().contains(SelectKeyGenerator.SELECT_KEY_SUFFIX)) {
-                    lookupKey = DynamicDataSourceHolder.DB_MASTER;
+                	dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
                 } else {
-
                     if (sql.matches(REGEX)) {
-                        lookupKey = DynamicDataSourceHolder.DB_MASTER;
+                    	dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
                     } else {
                         // 这里如果有多个从数据库，则添加挑选过程
-                        lookupKey = DynamicDataSourceHolder.DB_SLAVE;
+                    	dataBaseSourceType = DataBaseSourceType.SLAVE_DATASOURCE;
                     }
                 }
             }
         } else {
-            lookupKey = DynamicDataSourceHolder.DB_MASTER;
+        	dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
         }
-        DynamicDataSourceHolder.setDBType(lookupKey);
+        
+        DynamicDataSourceHolder.setDataSourceType(dataBaseSourceType);
+        
+        LOGGER.warn("======DynamicDataSourceInterceptor.intercept, synchronizationActive={}, dataBaseSourceType={}", synchronizationActive, dataBaseSourceType);
+        
         return invocation.proceed();
     }
 

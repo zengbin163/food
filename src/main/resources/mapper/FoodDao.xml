@@ -101,7 +101,7 @@
 		         and f.food_name like concat('%',#{foodName},'%') 
 		    </if>
 		</where>
-        order by f.update_time desc
+        order by f.update_time DESC
     </select>
 	
 </mapper>

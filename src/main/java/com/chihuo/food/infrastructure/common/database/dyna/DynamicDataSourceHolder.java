@@ -1,27 +1,24 @@
 package com.chihuo.food.infrastructure.common.database.dyna;
 
+import com.chihuo.food.infrastructure.common.database.config.DataBaseSourceType;
+
 /**
  * @author zengbin
  * @Date 2019/6/8 12:14
  */
 public class DynamicDataSourceHolder {
-    private static ThreadLocal<String> contextHolder = new ThreadLocal<>();
-    public static final String DB_MASTER = "master";
-    public static final String DB_SLAVE = "slave";
 
-    public static String getDbType() {
-        String db = contextHolder.get();
-        if (db == null) {
-            db = DB_MASTER;
-        }
-        return db;
-    }
+	private static final ThreadLocal<DataBaseSourceType> CONTEXT_HOLDER = new ThreadLocal<>();
 
-    public static void setDBType(String str) {
-        contextHolder.set(str);
-    }
+	public static void setDataSourceType(DataBaseSourceType dataSourceType) {
+		CONTEXT_HOLDER.set(dataSourceType);
+	}
 
-    public static void clearDbType() {
-        contextHolder.remove();
-    }
+	public static DataBaseSourceType getDataSourceType() {
+		return CONTEXT_HOLDER.get();
+	}
+
+	public static void clearDataSourceTypeType() {
+		CONTEXT_HOLDER.remove();
+	}
 }

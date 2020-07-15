@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chihuo.food.domain.category.repository.facade.CategoryItemRepository;
 import com.chihuo.food.domain.category.repository.mapper.CategoryItemDao;
@@ -44,7 +43,7 @@ public class CategoryItemRepositoryImpl implements CategoryItemRepository {
 	}
 
 	@Override
-	public IPage<CategoryItemPO> queryCategoryItemList(Page<?> page, Integer typeId, Integer firstCategoryId, Integer secondCategoryId, String itemName) {
+	public List<CategoryItemPO> queryCategoryItemList(Page<?> page, Integer typeId, Integer firstCategoryId, Integer secondCategoryId, String itemName) {
 		return this.categoryItemDao.queryCategoryItemList(page, typeId, firstCategoryId, secondCategoryId, itemName);
 	}
 

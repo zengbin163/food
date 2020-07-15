@@ -4,10 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 
 @SpringBootApplication
+@EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 @NacosPropertySource(dataId = "com.chihuo.food", autoRefreshed = true)
 public class StartApplication {
