@@ -6,7 +6,7 @@ import com.chihuo.food.domain.food.repository.po.FoodPO;
 
 public interface FoodRepository {
 
-	void save(FoodPO foodPO);
+	Integer save(FoodPO foodPO);
 
 	void update(FoodPO foodPO);
 

@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>美食分类属性库列表</title> 
+		<title>美食列表</title> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 		<link rel="stylesheet" type="text/css" href="/common/css/themes/default/easyui.css">
 		<link rel="stylesheet" type="text/css" href="/common/css/themes/icon.css">
@@ -11,35 +11,26 @@
 		<script type="text/javascript" src="/category/initCategory.js"></script>
 		<script type="text/javascript">
 			var host = 'http://127.0.0.1:8085';
-			var reqUrl = host + '/categoryItem/findItemList';
+			var reqUrl = host + '/food/findFoodList';
 		</script>
 	</head>
 	<body>
-		<h2>美食分类属性库</h2>
-		<p>按条件查询您的分类属性库</p>
+		<h2>美食列表</h2>
+		<p>按条件查询您的美食</p>
 		<div style="text-align:left;margin-bottom:20px">
-			<select class="easyui-combobox" id="categoryTypeId" name="categoryTypeId" style="width:200px" ></select>
 			<select class="easyui-combobox" id="firstCategoryId" name="firstCategoryId" style="width:200px" ></select>
 			<select class="easyui-combobox" id="secondCategoryId" name="secondCategoryId" style="width:200px" ></select>
-			<input class="easyui-textbox" id="itemName" name="itemName" style="width:250px" data-options="
-					label:'分类属性名称:',
+			<input class="easyui-textbox" id="foodName" name="foodName" style="width:250px" data-options="
+					label:'美食名称:',
 					required:false,
-					labelWidth:'100px'" />
+					labelWidth:'70px'" />
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryList()" style="width:80px">查询</a>
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearList()" style="width:80px">清除</a>
 		</div>
-		<table id="categoryItemList" title="分类属性" style="width:1200px;height:425px"
+		<table id="foodList" title="美食属性" style="width:1100px;height:725px"
 			   data-options="rownumbers:true,singleSelect:true,pagination:true,fitcolumns:true,scrollbarSize:0">
 			<thead>
 				<tr>
-					<th data-options="field:'categoryTypeId',width:150,align:'center', 
-									     formatter:function(value,rec){
-									         return rec.categoryType.id;
-									     }">美食分类大类id</th>
-					<th data-options="field:'categoryType.typeName',width:150,align:'center', 
-									     formatter:function(value,rec){
-									         return rec.categoryType.typeName;
-									     }">美食分类大类名称</th>
 					<th data-options="field:'parentCategoryId',width:150,align:'center',
 										 formatter:function(value,rec){
 									         return rec.parentCategory.id;
@@ -56,11 +47,19 @@
 										 formatter:function(value,rec){
 									         return rec.category.categoryName;
 									     }">美食二级分类名称</th>
-					<th data-options="field:'id',width:100,align:'center'">分类属性id</th>
-					<th data-options="field:'itemName',width:150,align:'center'">分类属性名称</th>
+					<th data-options="field:'id',width:100,align:'center'">美食id</th>
+					<th data-options="field:'foodName',width:150,align:'center'">美食名称</th>
+					<th data-options="field:'foodPic',width:150,align:'center',
+										formatter:function(value){
+											return '<img onclick=zoomInPreview(\'' + value + '\') style=width:66px;height:60px;margin-left:3px; src=\'' + value + '\' title=点击预览  />';
+										}">美食主图预览</th>
 				</tr>
 			</thead>
 		</table>
+		
+		<div id='dialogDivPreviewId'>
+			<img id="imgUrl" src="" alt="" style="width:450px;height:400px;display:none;"> 
+		</div>
 		
 		<div id="dialogDivId" title="新增分类属性" style="width:100%;max-width:350px;padding:30px 60px;display:none;">
 			<form id="dialogCategoryItemForm" method="post">
@@ -103,25 +102,13 @@
 		</div>
 		
 		<script type="text/javascript">
-		    //美食分类大类初始化
-			$('#categoryTypeId').combobox({
-			    url: host + '/categoryType/findList',
-				method:'get',
-			    valueField:'id',
-			    textField:'typeName',
-				panelHeight:'auto',
-				label: '美食大类:',
-				labelPosition: 'right',
-				required:false,
-				labelWidth:'70px'
-			});
 			//初始化一级类目和二级类目
 			initSaveFirstCategory('firstCategoryId', 'secondCategoryId');
 			initSaveSecondCategory('secondCategoryId');
 
 			//datagrid界面初始化
 			$(function() {
-				var pager = $('#categoryItemList').datagrid().datagrid('getPager');
+				var pager = $('#foodList').datagrid().datagrid('getPager');
 				pager.pagination({
 					buttons:[{
 						iconCls:'icon-search',
@@ -148,13 +135,12 @@
 			})
 			
 			function queryList(pageNum, pageSize) {
-				var categoryTypeId = $('#categoryTypeId').combobox('getValue');
 				var firstCategoryId = $('#firstCategoryId').combobox('getValue');
 				var secondCategoryId = $('#secondCategoryId').combobox('getValue');
-				var itemName = $('#itemName').textbox('getValue');
+				var foodName = $('#foodName').textbox('getValue');
 				var current = pageNum;
 				var size = pageSize;
-				var opts = $('#categoryItemList').datagrid('options');
+				var opts = $('#foodList').datagrid('options');
 				if(current == '' || current == undefined) {
 					current = opts.pageNumber;
 				}
@@ -162,10 +148,9 @@
 					size = opts.pageSize;
 				}
 				var requestParam = {
-					'categoryTypeId':categoryTypeId,
 					'firstCategoryId':firstCategoryId,
 					'secondCategoryId':secondCategoryId,
-					'itemName':encodeURIComponent(itemName),
+					'foodName':encodeURIComponent(foodName),
 					'current':current,
 					'size':size					
 				};
@@ -175,18 +160,21 @@
 				    data:JSON.stringify(requestParam),//传递的参数
 				    dataType:"json",                  //返回的数据类型
 				    success:function(data) {          //data就是返回的json类型的数据
-				    	$('#categoryItemList').datagrid({
-												    		fitcolumns:true,
-												            scrollbarSize:0,
-												            rownumbers:true,
-															singleSelect:true,
-															pagination:true,
-															loadMsg:"加载中"			        								   
-													   })
-										 			  .datagrid('loadData', {
-															rows:data.records
-													   });
-				        var pager = $('#categoryItemList').datagrid('getPager');  
+				    	$('#foodList').datagrid({
+										    		fitcolumns:true,
+										            scrollbarSize:0,
+										            rownumbers:true,
+													singleSelect:true,
+													pagination:true,
+													loadMsg:"加载中",
+													onDblClickRow:function(rowIndex, rowData){
+														window.open(host + '/foodDetail.html?foodId=' + rowData.id,'newwindow','height=' + (screen.availHeight-50) + ',width=' + (screen.availWidth - 10) + ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+													}
+											   })
+								 			   .datagrid('loadData', {
+													rows:data.records
+											   });
+				        var pager = $('#foodList').datagrid('getPager');  
 				        pager.pagination({
 							total:data.total,
 							pageSize:data.size,
@@ -225,10 +213,23 @@
 			}
 			
 			function clearList() {
-				$('#categoryTypeId').combobox('clear');
 				$('#firstCategoryId').combobox('clear');
 				$('#secondCategoryId').combobox('clear');
-				$('#itemName').textbox('clear');
+				$('#foodName').textbox('clear');
+			}
+			
+			function zoomInPreview(img) {
+				$('#dialogDivPreviewId').dialog({
+				    title: '预览',
+				    width: 500,
+				    height:450,
+				    resizable:true,
+				    closed: false,
+				    cache: false,
+				    modal: true
+				});
+            	$('#imgUrl').show();
+            	$("#imgUrl").attr('src', img);
 			}
 			
 			function saveCategoryItemPreview() {
@@ -246,7 +247,7 @@
 		        });
 			}
 
-			function saveCategoryItem() {
+		    function saveCategoryItem() {
 				var dialogFirstCategoryId = $('#dialogFirstCategoryId').combobox('getValue');
 				var dialogSecondCategoryId = $('#dialogSecondCategoryId').combobox('getValue');
 				var dialogItemName = $('#dialogItemName').textbox('getValue');

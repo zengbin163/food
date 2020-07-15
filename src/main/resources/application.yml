@@ -8,7 +8,7 @@ spring:
    datasource:
       hikari:
          master:
-            driverClassName: com.mysql.cj.jdbc.Driver
+            driver-class-name: com.mysql.cj.jdbc.Driver
             jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
             username: root
             password: ntVklfM5@VMj2pHd
@@ -18,7 +18,7 @@ spring:
             loginTimeout: 5
             maxLifetime: 60000
          slave:
-            driverClassName: com.mysql.cj.jdbc.Driver
+            driver-class-name: com.mysql.cj.jdbc.Driver
             jdbc-url: jdbc:mysql://47.115.34.118:3306/food?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
             username: root
             password: ntVklfM5@VMj2pHd
@@ -27,6 +27,9 @@ spring:
             validationTimeout: 3000
             loginTimeout: 5
             maxLifetime: 60000
+   main:
+      allow-bean-definition-overriding: true
+
 logging:
    level:
       com.chihuo.food: debug

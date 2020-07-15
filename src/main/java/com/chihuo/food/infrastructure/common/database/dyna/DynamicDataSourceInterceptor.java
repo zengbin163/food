@@ -15,6 +15,8 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
@@ -27,6 +29,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class DynamicDataSourceInterceptor implements Interceptor {
     private static final String REGEX = ".*insert\\u0020.*|.*delete\\u0020.*|.*update\\u0020.*";
+	private final static Logger LOGGER = LoggerFactory.getLogger(DynamicDataSourceInterceptor.class);
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -70,6 +73,6 @@ public class DynamicDataSourceInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
-
+		LOGGER.info("DynamicDataSourceInterceptor类  ---> setProperties方法 ---> properties参数：{}", properties);
     }
 }

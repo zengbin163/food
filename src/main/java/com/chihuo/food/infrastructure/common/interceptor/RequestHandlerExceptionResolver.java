@@ -1,8 +1,8 @@
 package com.chihuo.food.infrastructure.common.interceptor;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,10 +16,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.chihuo.food.infrastructure.common.api.Response;
+import com.chihuo.food.infrastructure.common.api.ResponsePages;
 import com.chihuo.food.infrastructure.common.api.ResponseStatus;
+import com.chihuo.food.infrastructure.common.event.DomainEvent;
+import com.chihuo.food.infrastructure.common.event.EventPublisher;
 import com.chihuo.food.infrastructure.common.exception.BusinessException;
 import com.chihuo.food.infrastructure.common.exception.SystemException;
-import com.chihuo.food.infrastructure.util.LoggerUtil;
+import com.chihuo.food.infrastructure.util.SpringContextHolder;
+
+import cn.hutool.core.lang.UUID;
 
 /**
  * @author Bin.Zeng1
@@ -28,70 +33,55 @@ import com.chihuo.food.infrastructure.util.LoggerUtil;
 public class RequestHandlerExceptionResolver implements HandlerExceptionResolver, Serializable {
 
     private static final long serialVersionUID = 5397821535379381427L;
-    private String defaultErrorView;
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandlerExceptionResolver.class);
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object object, Exception exception) {
+    	String errorMsg = null;
         if (exception.getClass().isAssignableFrom(IllegalArgumentException.class)) {
             String detailMessage = exception.getMessage();
             if(StringUtils.isEmpty(detailMessage)) {
                 detailMessage = ResponseStatus.ILLEGAL_ARGUMENT.getString();
             }
-            LoggerUtil.ERROR(logger, String.format("[=========IllegalArgumentException======params : %s ; message : %s] ", ResponseStatus.ILLEGAL_ARGUMENT , detailMessage), exception);
-            String errorMsg = JSON.toJSONString(Response.failed(ResponseStatus.ILLEGAL_ARGUMENT , detailMessage), SerializerFeature.WriteMapNullValue).toString();
-            this.printJson(response, errorMsg);
-            return null;
+            errorMsg = JSON.toJSONString(Response.failed(ResponseStatus.ILLEGAL_ARGUMENT , detailMessage), SerializerFeature.WriteMapNullValue).toString();
         }else if (exception.getClass().isAssignableFrom(NoSuchMethodException.class)) {
             String detailMessage = exception.getMessage();
             if(StringUtils.isEmpty(detailMessage)) {
                 detailMessage = ResponseStatus.ILLEGAL_ARGUMENT.getString();
             }
-            LoggerUtil.ERROR(logger, String.format("[=========NoSuchMethodException======params : %s ; message : %s] ", ResponseStatus.NOT_EXISTS , detailMessage), exception);
-            String errorMsg = JSON.toJSONString(Response.failed(ResponseStatus.NOT_EXISTS , detailMessage), SerializerFeature.WriteMapNullValue).toString();
-            this.printJson(response, errorMsg);
-            return null;
+            errorMsg = JSON.toJSONString(Response.failed(ResponseStatus.NOT_EXISTS , detailMessage), SerializerFeature.WriteMapNullValue).toString();
         }else if (exception.getClass().isAssignableFrom(SystemException.class)) {
             SystemException ex = (SystemException)exception;
-            LoggerUtil.ERROR(logger, String.format("[=========SystemException======ResultCode : %s] ", ex.getResultCode()), exception);
-            String errorMsg = JSON.toJSONString(Response.failed(ex.getResultCode() , ex.getResultCode().getString()), SerializerFeature.WriteMapNullValue).toString();
-            this.printJson(response, errorMsg);
-            return null;
+            errorMsg = JSON.toJSONString(Response.failed(ex.getResultCode() , ex.getResultCode().getString()), SerializerFeature.WriteMapNullValue).toString();
         }else if (exception.getClass().isAssignableFrom(BusinessException.class)) {
             BusinessException ex = (BusinessException)exception;
-            LoggerUtil.ERROR(logger, String.format("[=========BusinessException======ResultCode : %s] ", ex.getResultCode()), exception);
-            String errorMsg = JSON.toJSONString(Response.failed(ex.getResultCode() , ex.getResultCode().getString()), SerializerFeature.WriteMapNullValue).toString();
-            this.printJson(response, errorMsg);
-            return null;
+            errorMsg = JSON.toJSONString(Response.failed(ex.getResultCode() , ex.getResultCode().getString()), SerializerFeature.WriteMapNullValue).toString();
         } else {
-            LoggerUtil.ERROR(logger, String.format("[=========OtherException======ResultCode : %s] ", ResponseStatus.SYSTEM_ERROR), exception);
-            String errorMsg = JSON.toJSONString(Response.failed(ResponseStatus.SYSTEM_ERROR , ResponseStatus.SYSTEM_ERROR.getString()), SerializerFeature.WriteMapNullValue).toString();
-            this.printJson(response, errorMsg);
-            return null;
+            errorMsg = JSON.toJSONString(Response.failed(ResponseStatus.SYSTEM_ERROR , ResponseStatus.SYSTEM_ERROR.getString()), SerializerFeature.WriteMapNullValue).toString();
         }
-    }
-
-    private void printJson(HttpServletResponse response, String jsonData) {
-        response.setContentType("application/json;charset=UTF-8");
-        response.setHeader("Charset", "UTF-8");
-        PrintWriter out = null;
-        try {
-            out = response.getWriter();
-        } catch (IOException e) {
-            LoggerUtil.ERROR(logger, String.format(e.getMessage()));
-        }
-        out.write(jsonData);
-        out.flush();
-        out.close();
-    }
-
-    public String getDefaultErrorView() {
-        return defaultErrorView;
-    }
-
-    public void setDefaultErrorView(String defaultErrorView) {
-        this.defaultErrorView = defaultErrorView;
+		
+        logger.error(errorMsg);
+        
+        //出现异常，事件告警处理
+        EventPublisher publisher = SpringContextHolder.getBean(EventPublisher.class);
+        DomainEvent event = new DomainEvent();
+        event.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+        event.setTimestamp(new Date());
+        event.setSource("RequestHandlerExceptionResolver.resolveException");
+        event.setData(errorMsg);
+        publisher.publish(event);
+		try {
+			//页面友好跳转
+			ResponsePages pages = SpringContextHolder.getBean(ResponsePages.class);
+			String url = pages.getPage(ResponsePages.ERROR);
+			logger.warn("异常告警页面跳转至--->{}", url);
+			response.sendRedirect(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
     }
 }
 

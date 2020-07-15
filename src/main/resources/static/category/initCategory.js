@@ -18,7 +18,8 @@ function initSaveFirstCategory(firstCategory, secondCategory) {
 			$('#' + secondCategory).combobox('enable');
 		}
 	});
-}			
+}
+
 //二级类目新增初始化
 function initSaveSecondCategory(secondCategory) { 
 	$('#' + secondCategory).combobox({
@@ -31,6 +32,24 @@ function initSaveSecondCategory(secondCategory) {
 		labelPosition: 'left',
 		required:false,
 		labelWidth:'70px'
+	});
+}
+
+//二级类目新增初始化（联动分类属性）
+function initSaveSecondCategoryWithItems(secondCategory) { 
+	$('#' + secondCategory).combobox({
+		url: '',
+		method:'get',
+		valueField:'id',
+		textField:'categoryName',
+		panelHeight:'auto',
+		label: '二级分类:',
+		labelPosition: 'left',
+		required:false,
+		labelWidth:'70px',
+		onSelect: function(param) {
+			initCategoryItems(param.id);//初始化分类属性库
+		}
 	});
 }
 

@@ -15,7 +15,6 @@ public interface FoodDao extends BaseMapper<FoodPO> {
 
 	FoodPO findById(Integer id);
 
-	IPage<FoodPO> queryFoodList(Page<?> page, @Param("firstCategoryId") Integer firstCategoryId,
-			@Param("secondCategoryId") Integer secondCategoryId, @Param("foodName") String foodName);
+	IPage<FoodPO> queryFoodList(Page<?> page, @Param("firstCategoryId") Integer firstCategoryId, @Param("secondCategoryId") Integer secondCategoryId, @Param("foodName") String foodName);
 
 }

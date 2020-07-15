@@ -89,7 +89,7 @@
         	   update_time updateTime
         from category_item
         where category_id = #{categoryId}
-        order by id asc
+        order by update_time DESC
     </select>
 	
 	<select id="queryCategoryItemList" resultMap="categoryItemResultMap">

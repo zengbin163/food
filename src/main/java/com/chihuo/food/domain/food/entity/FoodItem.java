@@ -1,9 +1,6 @@
 package com.chihuo.food.domain.food.entity;
 
 import java.util.Date;
-import java.util.List;
-
-import com.chihuo.food.domain.category.entity.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,15 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Food {
+public class FoodItem {
     private Integer id;
-    private Category category;
-    private Category parentCategory;
-    private String foodName;
-    private String foodPic;
-    private String foodInfo;
+	private Integer foodId;
+    private Integer categoryItemId;
     private Date createTime;
     private Date updateTime;
     
-    private List<FoodItem> foodItemList;
+    private String itemName;
 }

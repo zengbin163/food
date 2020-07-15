@@ -11,6 +11,7 @@ public class FoodDTO {
 	private String foodName;
 	private String foodPic;
 	private String foodInfo;
+	private Integer[] itemArray;
 	private Date createTime;
 	private Date updateTime;
 

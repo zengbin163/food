@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chihuo.food.domain.food.repository.mapper.FoodItemDao">
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.chihuo.food.domain.food.repository.po.FoodItemPO">
+		  insert into food_item (
+				food_id,
+				category_item_id,
+				create_time,
+				update_time
+		  ) values (
+		    	#{foodItemPO.foodId},
+		    	#{foodItemPO.categoryItemId},
+	            NOW(),
+		        NOW()
+		  )
+	</insert>
+    
+	<delete id="delete" parameterType="Integer"> 
+		delete from food_item where id = #{id}
+	</delete>
+	    
+    <select id="findById" parameterType="Integer" resultType="com.chihuo.food.domain.food.repository.po.FoodItemPO">
+        select f.id id,
+        	   f.food_id foodId,
+        	   f.category_item_id categoryItemId,
+        	   f.create_time createTime,
+        	   f.update_time updateTime,
+			   c.item_name itemName
+        from food_item f JOIN category_item c ON f.category_item_id = c.id
+        where f.id = #{id}
+    </select>
+    
+    <select id="queryFoodItemListByFoodId" resultType="com.chihuo.food.domain.food.repository.po.FoodItemPO">
+        select f.id id,
+        	   f.food_id foodId,
+        	   f.category_item_id categoryItemId,
+        	   f.create_time createTime,
+        	   f.update_time updateTime,
+			   c.item_name itemName
+        from food_item f JOIN category_item c ON f.category_item_id = c.id
+        where f.food_id = #{foodId}
+        order by f.update_time DESC
+    </select>
+	
+</mapper>

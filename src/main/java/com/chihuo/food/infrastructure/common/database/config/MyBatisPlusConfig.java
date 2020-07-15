@@ -1,21 +1,18 @@
 package com.chihuo.food.infrastructure.common.database.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
@@ -25,7 +22,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.dialects.MySqlDiale
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.chihuo.food.infrastructure.common.database.dyna.DynamicDataSource;
-import com.chihuo.food.infrastructure.common.database.dyna.DynamicDataSourceHolder;
 import com.chihuo.food.infrastructure.common.database.dyna.DynamicDataSourceInterceptor;
 
 /**
@@ -33,20 +29,13 @@ import com.chihuo.food.infrastructure.common.database.dyna.DynamicDataSourceInte
  * @Date 2019/6/8 16:12
  */
 @Configuration // 该注解类似于spring配置文件
+@EnableTransactionManagement
 @MapperScan(basePackages = "com.chihuo.food.domain.*.repository.mapper*")
-public class MyBatisPlusConfig {
-	
-    @Primary
-    @Bean(name = "dynamicDataSource")
-    public DynamicDataSource dataSource(@Qualifier("master") DataSource master, @Qualifier("slave") DataSource slave) {
-        Map<Object, Object> targetDataSource = new HashMap<>();
-        targetDataSource.put(DynamicDataSourceHolder.DB_MASTER, master);
-        targetDataSource.put(DynamicDataSourceHolder.DB_SLAVE, slave);
-        DynamicDataSource dataSource = new DynamicDataSource();
-        dataSource.setTargetDataSources(targetDataSource);
-        return dataSource;
-    }
+public class MyBatisPlusConfig implements TransactionManagementConfigurer {
 
+	@Autowired
+	private DataSourceConfig config;
+	
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor pageInterceptor = new PaginationInterceptor();
@@ -69,7 +58,7 @@ public class MyBatisPlusConfig {
         MybatisSqlSessionFactoryBean sqlSessionFactory = new MybatisSqlSessionFactoryBean();
         // 懒加载
         LazyConnectionDataSourceProxy p = new LazyConnectionDataSourceProxy();
-        p.setTargetDataSource(dataSource(DataSourceMaker.master(), DataSourceMaker.slave()));
+        p.setTargetDataSource(config.dataSource(config.master(), config.slave()));
         sqlSessionFactory.setDataSource(p);
         sqlSessionFactory.setTypeAliasesPackage("com.chihuo.food.domain.*.repository.po");
         // 需要mapper文件并且不在同一个包下时加入扫描，
@@ -92,8 +81,18 @@ public class MyBatisPlusConfig {
      * 配置事务管理器
      */
     @Bean
-    public DataSourceTransactionManager transactionManager(DynamicDataSource dataSource) throws Exception {
+    public PlatformTransactionManager transactionManager(DynamicDataSource dataSource) throws Exception {
         return new DataSourceTransactionManager(dataSource);
+    }
+    
+    @Override
+    public PlatformTransactionManager annotationDrivenTransactionManager() {
+        try {
+			return transactionManager(config.dataSource(config.master(), config.slave()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
     }
 
     @Bean
@@ -101,7 +100,7 @@ public class MyBatisPlusConfig {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setBanner(false);
         GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig();
-        dbConfig.setIdType(IdType.ASSIGN_ID);
+        dbConfig.setIdType(IdType.AUTO);
         globalConfig.setDbConfig(dbConfig);
         return globalConfig;
     }

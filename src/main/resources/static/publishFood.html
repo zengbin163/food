@@ -30,6 +30,14 @@
 				<div style="margin-bottom:20px">
 					<select class="easyui-combobox" id="secondCategoryId" name="secondCategoryId" style="width:200px" ></select>
 				</div>
+				<div id="categoryItemDivId" style="margin-bottom:20px;display:none;">
+				        <div style="margin-bottom:20px">               
+				                                 美食分类属性:
+				        </div>                         
+                        <div style="margin-bottom:20px">
+                           	<div id="categoryItemCheckBoxDivId"></div>
+                        </div>
+				</div>
 				<div style="margin-bottom:20px">
 					<input class="easyui-textbox" id="foodName" name="foodName" style="width:250px" data-options="
 							label:'美食名称:',
@@ -66,7 +74,26 @@
 		    var foodPicPath = '';
 			//初始化一级类目和二级类目
 			initSaveFirstCategory('firstCategoryId', 'secondCategoryId');
-			initSaveSecondCategory('secondCategoryId');
+			initSaveSecondCategoryWithItems('secondCategoryId');
+			//初始化分类属性checkbox
+			function initCategoryItems(categoryId) {
+			  $.ajax({
+				 type:"GET",                      //请求类型
+				 url:host + "/categoryItem/findItemByCategoryId?categoryId=" + categoryId,      //URL
+				 dataType:"json",                  //返回的数据类型
+				 success:function(data){           //data就是返回的json类型的数据
+		    	   var html = '';
+				   for(i=0;i<data.length;i++) {
+				     html = html + '&nbsp;&nbsp;' + data[i].itemName + ':' + '<input type=\'checkbox\' name=\'categoryItemCheckBox\' value=\'' + data[i].id + '\' />';
+				   }
+				   $('#categoryItemCheckBoxDivId').html(html);
+				   $('#categoryItemDivId').show();
+				 },
+				 error:function(data){
+				   alert("查询失败" + data);
+				 }
+			  });				
+			}
 			//初始化文件上传
             $('#foodPic').filebox({
                 buttonText: '选择上传的图片',
@@ -104,16 +131,25 @@
 				var foodName = $('#foodName').val();
 				var foodPic = foodPicPath;
 				var foodInfo = document.getElementById("foodInfo").value;
+				//分类属性集合(checkbox)
+				var itemArray = new Array();
+				$.each($('input[name="categoryItemCheckBox"]'),function(){
+	                if(this.checked){
+	                	itemArray.push($(this).val());
+	                }
+	            });
 				//KindEditor.html('#foodInfo' , 'xxxxxxxxxxxxxxxxxxx');
-				if(firstCategoryId == '' || secondCategoryId == '' || foodName == '' || foodPic == '' || foodInfo == '') {
+				if(firstCategoryId == '' || secondCategoryId == '' || foodName == '' || foodPic == '' || foodInfo == '' || 0 == itemArray.length) {
 					alert('参数不能为空');
 					return;
 				}
+				
 				var requestParam = {
 					'categoryId':secondCategoryId,
 					'foodName':encodeURIComponent(foodName),
 					'foodPic':foodPic,
-					'foodInfo':escape(foodInfo)
+					'foodInfo':encodeURIComponent(foodInfo),
+					'itemArray':itemArray
 				};
 				
 				var jsonParam = JSON.stringify(requestParam);

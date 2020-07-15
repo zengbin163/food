@@ -8,7 +8,7 @@ import com.chihuo.food.domain.category.repository.po.CategoryItemPO;
 
 public interface CategoryItemRepository {
 
-	void save(CategoryItemPO categoryItemPO);
+	Integer save(CategoryItemPO categoryItemPO);
 
 	void update(CategoryItemPO categoryItemPO);
 	

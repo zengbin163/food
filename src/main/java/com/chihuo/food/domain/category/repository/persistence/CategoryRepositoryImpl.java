@@ -16,8 +16,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     private CategoryDao categoryDao;
 
 	@Override
-	public void save(CategoryPO categoryPO) {
+	public Integer save(CategoryPO categoryPO) {
 		this.categoryDao.save(categoryPO);
+		return categoryPO.getId();
 	}
 
 	@Override
