@@ -1,9 +1,9 @@
 member:
- notes: 吃货美食
+   notes: 吃货美食
 
 server:
- port: 8085
- host: 127.0.0.1
+   port: 7003
+   host: 127.0.0.1
 
 #数据库相关配置
 spring:
@@ -69,6 +69,8 @@ spring:
             filters: stat,wall
             # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
             connectionProperties: druid.stat.mergeSql= true;druid.stat.slowSqlMillis= 5000;druid.stat.logSlowSql= true
+   application:
+      name: UID-CONSUMER
 
 logging:
    level:

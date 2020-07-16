@@ -21,7 +21,7 @@
 	</properties>
 
 	<dependencies>
-	    <!-- spring boot -->
+		<!-- spring boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot</artifactId>
@@ -92,9 +92,9 @@
 			<version>3.10</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-text</artifactId>
-		    <version>1.8</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba.boot</groupId>
@@ -193,6 +193,11 @@
 			<version>1.18.12</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.chihuo</groupId>
+			<artifactId>uid-server</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -215,12 +220,12 @@
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-				<version>2.6</version>
+				<version>3.1.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<source>1.8</source>
@@ -232,7 +237,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>3.2.0</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -248,11 +253,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.3.1</version>
 				<configuration>
 					<warName>${project.artifactId}</warName>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
