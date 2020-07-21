@@ -2,8 +2,10 @@ member:
    notes: 吃货美食
 
 server:
-   port: 7003
+   port: 9000
    host: 127.0.0.1
+   public:
+      host: public.server.com
 
 #数据库相关配置
 spring:
@@ -70,7 +72,7 @@ spring:
             # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
             connectionProperties: druid.stat.mergeSql= true;druid.stat.slowSqlMillis= 5000;druid.stat.logSlowSql= true
    application:
-      name: UID-CONSUMER
+      name: uid-consumer
 
 logging:
    level:
@@ -88,3 +90,29 @@ file:
   upload:
     resource: /pic/
     path: D:/pic/test/
+
+#spring cloud
+eureka:
+   client:
+      registerWithEureka: true #是否注册到Eureka,是否在注册中心显示
+      service-url:
+         defaultZone: http://eureka-server01.com:7001/eureka,http://eureka-server02.com:7002/eureka
+   instance:
+      hostname: ${spring.cloud.client.ip-address}
+      prefer-ip-address: true      #以IP地址注册到服务中心
+      instance-id: ${spring.cloud.client.ip-address}:${server.port}
+      ip-address: ${server.public.host}      #公网ip，如果是服务内网调用不需要声明这个
+      non-secure-port: ${server.port}      #公网端口，如果是服务内网调用不需要声明这个
+      lease-expiration-duration-in-seconds: 15      #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
+      lease-renewal-interval-in-seconds: 5      #服务刷新时间配置，每隔这个时间会主动心跳一次
+   healthcheck:
+      enabled: true # 启用健康检查,注意:需要引用spring boot actuator
+info:
+   app:
+      name: @project.artifactId@
+      encoding: @project.build.sourceEncoding@
+   company:
+      name: @project.description@
+   build:
+      artifactId: @project.artifactId@
+      version: @project.version@
