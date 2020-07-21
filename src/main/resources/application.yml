@@ -94,7 +94,6 @@ file:
 #spring cloud
 eureka:
    client:
-      registerWithEureka: true #是否注册到Eureka,是否在注册中心显示
       service-url:
          defaultZone: http://eureka-server01.com:7001/eureka,http://eureka-server02.com:7002/eureka
    instance:
