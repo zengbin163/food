@@ -123,6 +123,21 @@
 		    <artifactId>spring-cloud-config-client</artifactId>
 		    <version>2.2.3.RELEASE</version>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-kafka</artifactId>
+            <version>2.2.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-kafka</artifactId>
+            <version>3.0.6.RELEASE</version>
+        </dependency>
+		<dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-bus</artifactId>
+            <version>2.2.2.RELEASE</version>
+        </dependency>
 		<!-- spring cloud -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -228,7 +243,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.chihuo</groupId>
-			<artifactId>uid-server</artifactId>
+			<artifactId>api</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

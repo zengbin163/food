@@ -8,12 +8,12 @@ import com.alibaba.fastjson.JSONObject;
 public class UidClientComponentFallback implements UidClientComponent {
 
 	@Override
-	public long getUID() {
-		return -1;
+	public Long getUID() {
+		return -1L;
 	}
 
 	@Override
-	public String parseUID(long uid) {
+	public String parseUID(Long uid) {
 		JSONObject json = new JSONObject();
 		json.put("uid", -1);
 		json.put("fallback", "服务器异常进行熔断");

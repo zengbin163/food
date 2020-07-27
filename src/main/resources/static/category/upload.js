@@ -15,8 +15,8 @@ function UploadFile(fileBoxName) {
             processData: false,
             contentType: false,
             data: formData,
-            success: function (json) {
-            	changeFileBoxValue(json.data);
+            success: function(fileAccess) {
+            	changeFileBoxValue(fileAccess);
             },
             error: function (xhr, status, error) {
                 $.messager.alert("提示", "操作失败");

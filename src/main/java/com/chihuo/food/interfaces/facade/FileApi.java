@@ -32,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chihuo.food.infrastructure.common.api.Response;
 
 @RestController
 @RequestMapping("/file")
@@ -56,21 +55,21 @@ public class FileApi {
      * @return
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public Response upload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request) {
+    public String upload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request) {
     	//文件原始名称
         String originalFilename = file.getOriginalFilename();
         //建议文件类型
         String contentType = file.getContentType();
         if (!CONTENT_TYPE.contains(contentType)) {
             LOGGER.info("文件类型不合法:{}", originalFilename);
-            return Response.failed("文件类型不合法");
+            return "文件类型不合法";
         }
         try {
             //检验文件内容
             BufferedImage read = ImageIO.read(file.getInputStream());
             if (read == null) {
                 LOGGER.info("文件内容不合法:{}", originalFilename);
-                return Response.failed("文件内容不合法");
+                return "文件内容不合法";
             }
             String suffixName = originalFilename.substring(originalFilename.lastIndexOf("."));  // 后缀名
             String newFileName = UUID.randomUUID().toString().replaceAll("-", "") + suffixName; // 新文件名
@@ -78,12 +77,12 @@ public class FileApi {
             file.transferTo(new File(fileUploadPath + newFileName));
             //返回图片路径
             String fileAccess = "http://" + host + ":" + port + fileUploadResource + newFileName;
-            return Response.ok(fileAccess);
+            return fileAccess;
         } catch (IOException e) {
             LOGGER.error("服务器内部错误->:{}", originalFilename);
             e.printStackTrace();
         }
-        return Response.failed("文件上传失败");
+        return "文件上传失败";
     }
     
     private String getError(String message) {
