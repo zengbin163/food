@@ -21,7 +21,7 @@ import cn.hutool.core.util.URLUtil;
 
 public class RequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-	public static final Logger log = LoggerFactory.getLogger(RequestHandlerInterceptor.class);
+	public static final Logger log = LoggerFactory.getLogger(LoginHandlerInterceptor.class);
 
 	private List<String> EXCLUDE_URLS = Arrays.asList("/file/uploadJson");
 	

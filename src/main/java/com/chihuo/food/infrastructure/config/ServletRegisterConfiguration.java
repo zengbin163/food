@@ -1,4 +1,4 @@
-package com.chihuo.food.infrastructure.client.cfg;
+package com.chihuo.food.infrastructure.config;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;

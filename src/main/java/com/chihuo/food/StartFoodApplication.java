@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableHystrix
 @EnableFeignClients
 @EnableDiscoveryClient
-public class StartApplication {
+public class StartFoodApplication {
     public static void main(String[] args) {
-        SpringApplication.run(StartApplication.class, args);
+        SpringApplication.run(StartFoodApplication.class, args);
     }
 }
