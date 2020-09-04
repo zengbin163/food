@@ -21,8 +21,8 @@ public class FoodApplicationService {
 		this.foodDomainService.update(food);
 	}
 
-	public Food findById(Integer id) {
-		return this.foodDomainService.findById(id);
+	public Food findById(Long uid) {
+		return this.foodDomainService.findById(uid);
 	}
 
 	public IPage<Food> queryFoodList(Integer current, Integer size, Integer firstCategoryId, Integer secondCategoryId, String foodName) {

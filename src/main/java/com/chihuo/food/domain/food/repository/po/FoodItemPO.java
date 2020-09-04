@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FoodItemPO {
-	private Integer id;
-	private Integer foodId;
+	private Long uid;
+	private Long foodId;
 	private Integer categoryItemId;
 	private Date createTime;
 	private Date updateTime;

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chihuo.food.infrastructure.common.session.value.NoLogin;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Applications;
 
@@ -37,12 +38,14 @@ public class FoodConfigController {
 	@ApiOperation(value = "获取服务应用列表", notes = "获取服务应用列表详细描述")
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	@ResponseBody
+	@NoLogin
 	public String get() {
 		Applications applications = eurekaClient.getApplications();
 		return JSONObject.toJSONString(applications);
 	}
 
 	@RequestMapping(value = "/serviceurl", method = RequestMethod.GET)
+	@NoLogin
 	public Map<String, List<ServiceInstance>> serviceUrl() {
 		Map<String, List<ServiceInstance>> msl = new HashMap<>();
 		List<String> services = discoveryClient.getServices();
@@ -54,6 +57,7 @@ public class FoodConfigController {
 	}
 	
 	@GetMapping("/config")
+	@NoLogin
 	public ResponseEntity<String> config() {
 		JSONObject json = new JSONObject();
 		json.put("config", configName + "-" + configProfile);

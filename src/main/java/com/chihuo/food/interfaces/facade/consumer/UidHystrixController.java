@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chihuo.food.infrastructure.common.session.value.NoLogin;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
@@ -38,6 +39,7 @@ public class UidHystrixController {
 					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000") 
 			}
 	)
+	@NoLogin
 	public Long getUID() {
 		// 调用远程服务 http请求
 		String url = URL_PREFIX + "/uid/hystrix/getUID";
@@ -64,6 +66,7 @@ public class UidHystrixController {
 					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000") 
 			}
 	)
+	@NoLogin
 	public String parseUID(@RequestParam(name = "uid") Long uid) {
 		// 调用远程服务 http请求
 		String url = URL_PREFIX + "/uid/hystrix/parseUID?uid=" + uid;

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class FoodDTO {
-	private Integer id;
+	private Long uid;
 	private Integer categoryId;
 	private String foodName;
 	private String foodPic;

@@ -1,5 +1,6 @@
 package com.chihuo.food.domain.food.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -15,14 +16,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Food {
-    private Integer id;
+	
+    private Long uid;
     private Category category;
     private Category parentCategory;
     private String foodName;
     private String foodPic;
     private String foodInfo;
+    private BigDecimal price;
     private Date createTime;
     private Date updateTime;
     
     private List<FoodItem> foodItemList;
+    
 }

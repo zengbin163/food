@@ -17,6 +17,9 @@ import com.chihuo.food.domain.category.repository.po.CategoryItemPO;
 import com.chihuo.food.domain.category.repository.po.CategoryPO;
 import com.chihuo.food.domain.category.repository.po.CategoryTypePO;
 
+import cn.hutool.core.bean.copier.BeanCopier;
+import cn.hutool.core.bean.copier.CopyOptions;
+
 @Service
 public class CategoryFactory {
 
@@ -24,33 +27,28 @@ public class CategoryFactory {
     private CategoryRepository categoryRepository;
 
     public CategoryPO createCategoryPO(Category category){
-    	return CategoryPO.builder().id(category.getId()).categoryTypeId(category.getCategoryTypeId()).parentId(category.getParentId()).categoryName(category.getCategoryName()).createTime(category.getCreateTime()).updateTime(category.getUpdateTime()).build();
+    	BeanCopier<CategoryPO> copier = BeanCopier.create(category, new CategoryPO(), CopyOptions.create());
+    	return copier.copy();
     }
 
 	public Category createCategory(CategoryPO po) {
-    	return Category.builder().id(po.getId()).categoryTypeId(po.getCategoryTypeId()).parentId(po.getParentId()).categoryName(po.getCategoryName()).createTime(po.getCreateTime()).updateTime(po.getUpdateTime()).build();
+    	BeanCopier<Category> copier = BeanCopier.create(po, new Category(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public CategoryItemPO createCategoryItemPO(CategoryItem categoryItem){
-		return CategoryItemPO.builder().id(categoryItem.getId()).categoryId(categoryItem.getCategoryId()).itemName(categoryItem.getItemName()).createTime(categoryItem.getCreateTime()).updateTime(categoryItem.getUpdateTime()).build();
+    	BeanCopier<CategoryItemPO> copier = BeanCopier.create(categoryItem, new CategoryItemPO(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public CategoryItem createCategoryItem(CategoryItemPO po) {
-		CategoryItem item = CategoryItem.builder().id(po.getId()).categoryId(po.getCategoryId()).itemName(po.getItemName()).createTime(po.getCreateTime()).updateTime(po.getUpdateTime()).build();
-		if (null != po.getCategoryPO()) {
-			item.setCategory(createCategory(po.getCategoryPO()));
-		}
-		if (null != po.getParentCategoryPO()) {
-			item.setParentCategory(createCategory(po.getParentCategoryPO()));
-		}
-		if (null != po.getCategoryTypePO()) {
-			item.setCategoryType(createCategoryType(po.getCategoryTypePO()));
-		}
-		return item;
+    	BeanCopier<CategoryItem> copier = BeanCopier.create(po, new CategoryItem(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public CategoryType createCategoryType(CategoryTypePO po) {
-    	return CategoryType.builder().id(po.getId()).typeName(po.getTypeName()).createTime(po.getCreateTime()).updateTime(po.getUpdateTime()).build();
+    	BeanCopier<CategoryType> copier = BeanCopier.create(po, new CategoryType(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public List<Category> createCategoryList(List<CategoryPO> poList) {

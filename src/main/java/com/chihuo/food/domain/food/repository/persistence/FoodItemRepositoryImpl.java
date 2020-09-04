@@ -16,23 +16,23 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
     private FoodItemDao foodItemDao;
 
 	@Override
-	public Integer save(FoodItemPO foodItemPO) {
+	public Long save(FoodItemPO foodItemPO) {
 		this.foodItemDao.save(foodItemPO);
-		return foodItemPO.getId();
+		return foodItemPO.getUid();
 	}
 
 	@Override
-	public void delete(Integer id) {
-		this.foodItemDao.delete(id);
+	public void delete(Long uid) {
+		this.foodItemDao.delete(uid);
 	}
 
 	@Override
-	public FoodItemPO findById(Integer id) {
-		return this.foodItemDao.findById(id);
+	public FoodItemPO findById(Long uid) {
+		return this.foodItemDao.findById(uid);
 	}
 
 	@Override
-	public List<FoodItemPO> queryFoodItemListByFoodId(Integer foodId) {
+	public List<FoodItemPO> queryFoodItemListByFoodId(Long foodId) {
 		return this.foodItemDao.queryFoodItemListByFoodId(foodId);
 	}
 

@@ -51,12 +51,12 @@ public class DynamicDataSourceInterceptor implements Interceptor {
                 if (ms.getId().contains(SelectKeyGenerator.SELECT_KEY_SUFFIX)) {
                 	dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
                 } else {
-                    if (sql.matches(REGEX)) {
-                    	dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
-                    } else {
-                        // 这里如果有多个从数据库，则添加挑选过程
-                    	dataBaseSourceType = DataBaseSourceType.SLAVE_DATASOURCE;
-                    }
+                    // 这里如果有多个从数据库，则添加挑选过程
+                	dataBaseSourceType = DataBaseSourceType.SLAVE_DATASOURCE;
+                }
+            } else {
+            	if (sql.matches(REGEX)) {
+                	dataBaseSourceType = DataBaseSourceType.MASTER_DATASOURCE;
                 }
             }
         } else {
@@ -65,7 +65,7 @@ public class DynamicDataSourceInterceptor implements Interceptor {
         
         DynamicDataSourceHolder.setDataSourceType(dataBaseSourceType);
         
-        LOGGER.warn("======DynamicDataSourceInterceptor.intercept, synchronizationActive={}, dataBaseSourceType={}", synchronizationActive, dataBaseSourceType);
+        LOGGER.error("======DynamicDataSourceInterceptor.intercept, synchronizationActive={}, dataBaseSourceType={}", synchronizationActive, dataBaseSourceType);
         
         return invocation.proceed();
     }

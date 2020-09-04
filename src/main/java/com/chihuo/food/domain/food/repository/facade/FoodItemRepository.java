@@ -6,12 +6,12 @@ import com.chihuo.food.domain.food.repository.po.FoodItemPO;
 
 public interface FoodItemRepository {
 
-	Integer save(FoodItemPO foodItemPO);
+	Long save(FoodItemPO foodItemPO);
 
-	void delete(Integer id);
+	void delete(Long uid);
 
-	FoodItemPO findById(Integer id);
+	FoodItemPO findById(Long uid);
 
-	List<FoodItemPO> queryFoodItemListByFoodId(Integer foodId);
+	List<FoodItemPO> queryFoodItemListByFoodId(Long foodId);
 
 }

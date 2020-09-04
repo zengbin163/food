@@ -1,4 +1,4 @@
-package com.chihuo.food.application.service;
+package com.chihuo.food.application.operation;
 
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -15,9 +15,9 @@ import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
 
-public class DingdingRobotApplicationService {
+public class DingdingRobotApplicationOperation {
     
-    private static final Logger logger = LoggerFactory.getLogger(DingdingRobotApplicationService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DingdingRobotApplicationOperation.class);
     
     /**
      * 生成sign签名
@@ -117,7 +117,7 @@ public class DingdingRobotApplicationService {
     }
 
     public static void main(String[] args) throws Exception {
-        DingdingRobotApplicationService robot = new DingdingRobotApplicationService();
+        DingdingRobotApplicationOperation robot = new DingdingRobotApplicationOperation();
         OapiRobotSendResponse response = robot.pushText("我是来自法苗网的机器人哦，请大家时刻留意我的消息哦【监控报警】", "18867102687");
         StringBuffer sb = new StringBuffer();
         sb.append("code=" + response.getCode());

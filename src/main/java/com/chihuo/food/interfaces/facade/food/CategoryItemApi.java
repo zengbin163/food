@@ -1,4 +1,4 @@
-package com.chihuo.food.interfaces.facade;
+package com.chihuo.food.interfaces.facade.food;
 
 import java.util.List;
 

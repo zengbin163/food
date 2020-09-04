@@ -1,6 +1,7 @@
 package com.chihuo.food.domain.food.repository.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,9 +18,8 @@ public class FoodRepositoryImpl implements FoodRepository {
     private FoodDao foodDao;
 
 	@Override
-	public Integer save(FoodPO foodPO) {
+	public void save(FoodPO foodPO) {
 		this.foodDao.save(foodPO);
-		return foodPO.getId();
 	}
 
 	@Override
@@ -28,13 +28,28 @@ public class FoodRepositoryImpl implements FoodRepository {
 	}
 
 	@Override
-	public FoodPO findById(Integer id) {
-		return this.foodDao.findById(id);
+	public Optional<FoodPO> findById(Long uid) {
+		return this.foodDao.findById(uid);
 	}
 
 	@Override
 	public List<FoodPO> queryFoodList(Page<?> page, Integer firstCategoryId, Integer secondCategoryId, String foodName) {
 		return this.foodDao.queryFoodList(page, firstCategoryId, secondCategoryId, foodName);
+	}
+
+	@Override
+	public List<FoodPO> findFoodListRandom(Integer foodCount) {
+		return this.foodDao.findFoodListRandom(foodCount);
+	}
+
+	@Override
+	public List<FoodPO> findFoodList() {
+		return this.foodDao.findFoodList();
+	}
+
+	@Override
+	public List<FoodPO> findFoodListByIds(List<Long> ids) {
+		return this.foodDao.findFoodListByIds(ids);
 	}
 
 }

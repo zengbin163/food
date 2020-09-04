@@ -1,6 +1,7 @@
 package com.chihuo.food.domain.food.repository.mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -14,8 +15,14 @@ public interface FoodDao extends BaseMapper<FoodPO> {
 
 	void update(@Param("foodPO") FoodPO foodPO);
 
-	FoodPO findById(Integer id);
+	Optional<FoodPO> findById(Long uid);
 
 	List<FoodPO> queryFoodList(Page<?> page, @Param("firstCategoryId") Integer firstCategoryId, @Param("secondCategoryId") Integer secondCategoryId, @Param("foodName") String foodName);
+
+	List<FoodPO> findFoodListRandom(@Param("foodCount") Integer foodCount);
+
+	List<FoodPO> findFoodList();
+
+	List<FoodPO> findFoodListByIds(List<Long> ids);
 
 }

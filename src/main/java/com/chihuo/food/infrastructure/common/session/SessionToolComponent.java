@@ -29,6 +29,7 @@ public class SessionToolComponent {
 	public static final String UUID_ = "uuid";
 	public static final String MOBILE = "mobile";
 	public static final String OPEN_ID = "openId";
+	public static final String TOKEN = "token";
 	public static final String SESSION_KEY = "SESSION_KEY_";
 
 	@Resource

@@ -1,4 +1,4 @@
-package com.chihuo.food.interfaces.facade;
+package com.chihuo.food.interfaces.facade.food;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +36,8 @@ public class FoodApi {
     }
     
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
-    public Food findById(@RequestParam(value = "id") Integer id) {
-    	return this.foodApplicationService.findById(id);
+    public Food findById(@RequestParam(value = "uid") Long uid) {
+    	return this.foodApplicationService.findById(uid);
     }
     
 	@RequestMapping(value = "/findFoodList", method = RequestMethod.POST)

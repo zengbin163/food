@@ -9,13 +9,19 @@ import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.chihuo.food.domain.category.entity.Category;
 import com.chihuo.food.domain.category.repository.po.CategoryPO;
 import com.chihuo.food.domain.category.service.CategoryFactory;
 import com.chihuo.food.domain.food.entity.Food;
 import com.chihuo.food.domain.food.entity.FoodItem;
+import com.chihuo.food.domain.food.entity.FoodStock;
+import com.chihuo.food.domain.food.entity.Promotion;
 import com.chihuo.food.domain.food.repository.po.FoodItemPO;
 import com.chihuo.food.domain.food.repository.po.FoodPO;
+import com.chihuo.food.domain.food.repository.po.FoodStockPO;
+import com.chihuo.food.domain.food.repository.po.PromotionPO;
+
+import cn.hutool.core.bean.copier.BeanCopier;
+import cn.hutool.core.bean.copier.CopyOptions;
 
 @Service
 public class FoodFactory {
@@ -24,20 +30,23 @@ public class FoodFactory {
 	private CategoryFactory categoryFactory;
 	
     public FoodPO createFoodPO(Food food) {
-    	return FoodPO.builder().id(food.getId()).categoryPO(this.categoryFactory.createCategoryPO(food.getCategory())).foodName(food.getFoodName()).foodPic(food.getFoodPic()).foodInfo(food.getFoodInfo()).createTime(food.getCreateTime()).updateTime(food.getUpdateTime()).build();
+    	BeanCopier<FoodPO> copier = BeanCopier.create(food, new FoodPO(), CopyOptions.create());
+    	return copier.copy();
     }
 
 	public Food createFood(FoodPO po) {
-		Category category = (null == po.getCategoryPO() ? null : this.categoryFactory.createCategory(po.getCategoryPO()));
-    	return Food.builder().id(po.getId()).category(category).foodName(po.getFoodName()).foodPic(po.getFoodPic()).foodInfo(po.getFoodInfo()).createTime(po.getCreateTime()).updateTime(po.getUpdateTime()).build();
+    	BeanCopier<Food> copier = BeanCopier.create(po, new Food(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public FoodItemPO createFoodItemPO(FoodItem foodItem) {
-		return FoodItemPO.builder().id(foodItem.getId()).categoryItemId(foodItem.getCategoryItemId()).foodId(foodItem.getFoodId()).createTime(foodItem.getCreateTime()).updateTime(foodItem.getUpdateTime()).build();
+    	BeanCopier<FoodItemPO> copier = BeanCopier.create(foodItem, new FoodItemPO(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public FoodItem createFoodItem(FoodItemPO foodItemPO) {
-		return FoodItem.builder().id(foodItemPO.getId()).categoryItemId(foodItemPO.getCategoryItemId()).foodId(foodItemPO.getFoodId()).createTime(foodItemPO.getCreateTime()).updateTime(foodItemPO.getUpdateTime()).build();
+    	BeanCopier<FoodItem> copier = BeanCopier.create(foodItemPO, new FoodItem(), CopyOptions.create());
+    	return copier.copy();
 	}
 	
 	public List<Food> createFoodList(List<FoodPO> poList) {
@@ -47,11 +56,11 @@ public class FoodFactory {
 		}
 		for(FoodPO po : poList) {
 			Food food = this.createFood(po);
-			CategoryPO categoryPO = po.getCategoryPO();
+			CategoryPO categoryPO = po.getCategory();
 			if(categoryPO != null) {
 				food.setCategory(this.categoryFactory.createCategory(categoryPO));
 			}
-			CategoryPO parentCategoryPO = po.getParentCategoryPO();
+			CategoryPO parentCategoryPO = po.getParentCategory();
 			if(parentCategoryPO != null) {
 				food.setParentCategory(this.categoryFactory.createCategory(parentCategoryPO));
 			}
@@ -68,6 +77,16 @@ public class FoodFactory {
 		page.setSize(pagePO.getSize());
 		page.setTotal(pagePO.getTotal());
 		return page;
+	}
+	
+	public FoodStock createFoodStock(FoodStockPO foodStockPO) {
+		BeanCopier<FoodStock> copier = BeanCopier.create(foodStockPO, new FoodStock(), CopyOptions.create());
+		return copier.copy();
+	}
+
+	public Promotion createPromotion(PromotionPO promotionPO) {
+		BeanCopier<Promotion> copier = BeanCopier.create(promotionPO, new Promotion(), CopyOptions.create());
+		return copier.copy();
 	}
 	
 }

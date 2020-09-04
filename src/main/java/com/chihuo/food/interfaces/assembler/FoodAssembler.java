@@ -15,7 +15,7 @@ public class FoodAssembler {
 
 	public static FoodDTO toDTO(Food food) {
 		FoodDTO dto = new FoodDTO();
-		dto.setId(food.getId());
+		dto.setUid(food.getUid());
 		dto.setCategoryId(food.getCategory() != null ? food.getCategory().getId() : null);
 		List<FoodItem> foodItemList = food.getFoodItemList();
 		if(CollectionUtil.isNotEmpty(foodItemList)) {
@@ -36,7 +36,7 @@ public class FoodAssembler {
 
 	public static Food toDO(FoodDTO dto) {
 		Food food = new Food();
-		food.setId(dto.getId());
+		food.setUid(dto.getUid());
 		if(null != dto.getCategoryId()) {
 			Category category = new Category();
 			category.setId(dto.getCategoryId());

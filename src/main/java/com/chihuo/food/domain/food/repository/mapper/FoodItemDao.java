@@ -11,10 +11,10 @@ public interface FoodItemDao extends BaseMapper<FoodItemPO> {
 
 	void save(@Param("foodItemPO") FoodItemPO foodItemPO);
 
-	void delete(Integer id);
+	void delete(Long uid);
 
-	FoodItemPO findById(Integer id);
+	FoodItemPO findById(Long uid);
 
-	List<FoodItemPO> queryFoodItemListByFoodId(Integer foodId);
+	List<FoodItemPO> queryFoodItemListByFoodId(Long foodId);
 
 }
