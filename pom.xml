@@ -16,7 +16,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<nacos-config-spring-boot.version>0.2.1</nacos-config-spring-boot.version>
-		<springboot.version>2.3.0.RELEASE</springboot.version>
+		<springboot.version>2.5.12</springboot.version>
 		<mybatisplus.version>3.3.2</mybatisplus.version>
 	</properties>
 
